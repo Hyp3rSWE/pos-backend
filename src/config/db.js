@@ -1,18 +1,20 @@
-const { Client } = require('pg');
+const { Sequelize } = require('sequelize');
 require('dotenv').config();  // Load environment variables
 
-// PostgreSQL connection
-const client = new Client({
+// PostgreSQL connection with Sequelize
+const sequelize = new Sequelize({
+    dialect: 'postgres',
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     database: process.env.DB_NAME,
-    user: process.env.DB_USER,
+    username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
+    logging: false,  // Set to `true` if you want to see SQL queries in the console
 });
 
 const connectDB = async () => {
     try {
-        await client.connect();
+        await sequelize.authenticate();  // Test connection
         console.log('Connected to PostgreSQL database');
     } catch (err) {
         console.error('Database connection error', err);
@@ -20,4 +22,4 @@ const connectDB = async () => {
     }
 };
 
-module.exports = { connectDB, client };
+module.exports = { connectDB, sequelize };

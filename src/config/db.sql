@@ -1,25 +1,26 @@
 CREATE TABLE "customer" (
-    "customer_id" VARCHAR(255) PRIMARY KEY,
+    "customer_id" SERIAL PRIMARY KEY,
     "customer_name" VARCHAR(255),
     "customer_phone" VARCHAR(50),
     "customer_debt" DOUBLE PRECISION
 );
 
 CREATE TABLE "user" (
-    "user_id" VARCHAR(255) PRIMARY KEY,
+    "user_id" SERIAL PRIMARY KEY,
     "user_role" VARCHAR(50),
+    "user_name" VARCHAR(255),
     "user_pass" VARCHAR(255)
 );
 
 CREATE TABLE "supplier" (
-    "supplier_id" VARCHAR(255) PRIMARY KEY,
+    "supplier_id" SERIAL PRIMARY KEY,
     "supplier_name" VARCHAR(255),
     "supplier_phone" VARCHAR(50)
 );
 
 CREATE TABLE "product" (
-    "product_id" VARCHAR(255) PRIMARY KEY,
-    "supplier_id" VARCHAR(255),
+    "product_id" SERIAL PRIMARY KEY,
+    "supplier_id" INT,
     "product_barcode" VARCHAR(50),
     "product_price" DOUBLE PRECISION,
     "product_name" VARCHAR(255),
@@ -28,8 +29,8 @@ CREATE TABLE "product" (
 );
 
 CREATE TABLE "product_variant" (
-    "variant_id" VARCHAR(255) PRIMARY KEY,
-    "product_id" VARCHAR(255),
+    "variant_id" SERIAL PRIMARY KEY,
+    "product_id" INT,
     "variant_barcode" VARCHAR(50),
     "variant_price" DOUBLE PRECISION,
     "variant_quantity" INT,
@@ -38,9 +39,9 @@ CREATE TABLE "product_variant" (
 );
 
 CREATE TABLE "invoice" (
-    "invoice_id" VARCHAR(255) PRIMARY KEY,
-    "user_id" VARCHAR(255),
-    "customer_id" VARCHAR(255),
+    "invoice_id" SERIAL PRIMARY KEY,
+    "user_id" INT,
+    "customer_id" INT,
     "invoice_timestamp" TIMESTAMP,
     "invoice_total_amount" DOUBLE PRECISION,
     "invoice_paid_amount" DOUBLE PRECISION,
@@ -49,9 +50,9 @@ CREATE TABLE "invoice" (
 );
 
 CREATE TABLE "invoice_line" (
-    "product_id" VARCHAR(255),
-    "invoice_id" VARCHAR(255),
-    "product_variant_id" VARCHAR(255),
+    "product_id" INT,
+    "invoice_id" INT,
+    "product_variant_id" INT,
     "invoice_line_quantity" INT,
     "invoice_line_price" DOUBLE PRECISION,
     PRIMARY KEY ("product_id", "invoice_id", "product_variant_id"),

@@ -4,123 +4,20 @@ const supplierController = require('../controllers/SupplierController');
 const { isAdminAuthenticated, isCashierAuthenticated } = require('../middleware/auth');
 
 
-/**
- * @swagger
- * /suppliers:
- *   post:
- *     summary: Create a new supplier
- *     tags: [Supplier]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               supplier_name:
- *                 type: string
- *               supplier_phone:
- *                 type: string
- *     responses:
- *       201:
- *         description: Supplier created successfully
- *       500:
- *         description: Internal server error
- */
-router.post('/', supplierController.createSupplier);
 
-/**
- * @swagger
- * /suppliers:
- *   get:
- *     summary: Get all suppliers
- *     tags: [Supplier]
- *     responses:
- *       200:
- *         description: A list of suppliers
- *       500:
- *         description: Internal server error
- */
-router.get('/', supplierController.getAllSuppliers);
+class SupplierRoutes {
+    constructor() {
+        this.router = express.Router();
+        this.initializeRoutes();
+    }
 
-/**
- * @swagger
- * /suppliers/{id}:
- *   get:
- *     summary: Get a supplier by ID
- *     tags: [Supplier]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The supplier ID
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: A supplier object
- *       404:
- *         description: Supplier not found
- *       500:
- *         description: Internal server error
- */
-router.get('/:id', supplierController.getSupplierById);
+    initializeRoutes() {
+        this.router.get("/", SupplierController.getAllSuppliers);
+        this.router.get("/:id", SupplierController.getSupplierById);
+        this.router.post("/", SupplierController.createSupplier);
+        this.router.put("/:id", SupplierController.updateSupplier);
+        this.router.delete("/:id", SupplierController.deleteSupplier);
+    }
+}
 
-/**
- * @swagger
- * /suppliers/{id}:
- *   put:
- *     summary: Update a supplier by ID
- *     tags: [Supplier]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The supplier ID
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               supplier_name:
- *                 type: string
- *               supplier_phone:
- *                 type: string
- *     responses:
- *       200:
- *         description: Supplier updated successfully
- *       404:
- *         description: Supplier not found
- *       500:
- *         description: Internal server error
- */
-router.put('/:id', supplierController.updateSupplier);
-
-/**
- * @swagger
- * /suppliers/{id}:
- *   delete:
- *     summary: Delete a supplier by ID
- *     tags: [Supplier]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The supplier ID
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Supplier deleted successfully
- *       404:
- *         description: Supplier not found
- *       500:
- *         description: Internal server error
- */
-router.delete('/:id', supplierController.deleteSupplier);
-
-module.exports = router;
+module.exports = new SupplierRoutes().router;

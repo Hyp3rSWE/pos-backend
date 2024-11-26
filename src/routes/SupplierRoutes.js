@@ -1,5 +1,9 @@
-const express = require("express");
-const SupplierController = require("../controllers/SupplierController");
+const express = require('express');
+const router = express.Router();
+const supplierController = require('../controllers/SupplierController');
+const { isAdminAuthenticated, isCashierAuthenticated } = require('../middleware/auth');
+
+
 
 class SupplierRoutes {
     constructor() {

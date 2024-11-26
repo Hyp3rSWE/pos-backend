@@ -1,0 +1,144 @@
+const express = require('express');
+const ProductVariantController = require('../controllers/ProductVariantController');
+const { isAdminAuthenticated, isCashierAuthenticated } = require('../middleware/auth');
+
+
+const router = express.Router();
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ProductVariant:
+ *       type: object
+ *       required:
+ *         - product_id
+ *         - variant_price
+ *       properties:
+ *         variant_id:
+ *           type: integer
+ *           description: Auto-generated ID for the product variant
+ *         product_id:
+ *           type: integer
+ *           description: ID of the product associated with this variant
+ *         variant_barcode:
+ *           type: string
+ *           description: Barcode of the product variant
+ *         variant_price:
+ *           type: number
+ *           description: Price of the product variant
+ *         variant_quantity:
+ *           type: integer
+ *           description: Quantity of the product variant
+ *         variant_stock_level:
+ *           type: integer
+ *           description: Stock level of the product variant
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: ProductVariants
+ *   description: API for managing product variants
+ */
+
+/**
+ * @swagger
+ * /product-variants:
+ *   get:
+ *     summary: Retrieve all product variants
+ *     tags: [ProductVariants]
+ *     responses:
+ *       200:
+ *         description: List of product variants
+ */
+router.get('/product-variants', ProductVariantController.getAllProductVariants);
+
+/**
+ * @swagger
+ * /product-variants/{id}:
+ *   get:
+ *     summary: Retrieve a specific product variant by ID
+ *     tags: [ProductVariants]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the product variant to retrieve
+ *     responses:
+ *       200:
+ *         description: Product variant details
+ *       404:
+ *         description: Product variant not found
+ */
+router.get('/product-variants/:id', ProductVariantController.getProductVariantById);
+
+/**
+ * @swagger
+ * /product-variants:
+ *   post:
+ *     summary: Create a new product variant
+ *     tags: [ProductVariants]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ProductVariant'
+ *     responses:
+ *       201:
+ *         description: Product variant created successfully
+ */
+router.post('/product-variants', ProductVariantController.createProductVariant);
+
+/**
+ * @swagger
+ * /product-variants/{id}:
+ *   put:
+ *     summary: Update an existing product variant
+ *     tags: [ProductVariants]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the product variant to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ProductVariant'
+ *     responses:
+ *       200:
+ *         description: Product variant updated successfully
+ *       404:
+ *         description: Product variant not found
+ */
+router.put('/product-variants/:id', ProductVariantController.updateProductVariant);
+
+/**
+ * @swagger
+ * /product-variants/{id}:
+ *   delete:
+ *     summary: Delete a product variant
+ *     tags: [ProductVariants]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the product variant to delete
+ *     responses:
+ *       200:
+ *         description: Product variant deleted successfully
+ *       404:
+ *         description: Product variant not found
+ */
+router.delete('/product-variants/:id', ProductVariantController.deleteProductVariant);
+
+module.exports = router;

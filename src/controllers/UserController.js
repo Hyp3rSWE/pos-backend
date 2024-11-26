@@ -34,6 +34,11 @@ class UserController {
                 return res.status(400).json({ error: 'All fields are required' });
             }
     
+            const existingUser = await User.findOne({ where: { user_name } });
+            if (existingUser) {
+                return res.status(409).json({ error: 'User already exists' });
+            }
+    
             const hashedPassword = await bcrypt.hash(user_pass, 10);
     
             const newUser = await User.create({
@@ -45,10 +50,10 @@ class UserController {
             res.status(201).json({ message: 'User created successfully', user: newUser });
         } catch (error) {
             console.error('Error during user creation:', error);
-    
             res.status(500).json({ error: 'Failed to create user', details: error.message });
         }
     }
+    
     
 
     static async updateUser(req, res) {
@@ -105,7 +110,6 @@ class UserController {
                 return res.status(404).json({ error: 'User not found' });
             }
     
-            // Compare password
             const isMatch = await bcrypt.compare(user_pass, user.user_pass);
             
             if (!isMatch) {

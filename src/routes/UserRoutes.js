@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const UserController = require('../controllers/UserController');
+const { isAdminAuthenticated, isCashierAuthenticated } = require('../middleware/auth');
 
 /**
  * @swagger
@@ -32,7 +33,7 @@ const UserController = require('../controllers/UserController');
  *                   user_name:
  *                     type: string
  */
-router.get('/', UserController.getAllUsers);
+router.get('/', isAdminAuthenticated,UserController.getAllUsers);
 
 /**
  * @swagger
@@ -53,7 +54,7 @@ router.get('/', UserController.getAllUsers);
  *       404:
  *         description: User not found.
  */
-router.get('/:id', UserController.getUserById);
+router.get('/:id', isAdminAuthenticated,UserController.getUserById);
 
 /**
  * @swagger
@@ -86,7 +87,7 @@ router.get('/:id', UserController.getUserById);
  *       400:
  *         description: Bad request.
  */
-router.post('/', UserController.createUser);
+router.post('/',isAdminAuthenticated, UserController.createUser);
 
 /**
  * @swagger
@@ -120,7 +121,7 @@ router.post('/', UserController.createUser);
  *       404:
  *         description: User not found.
  */
-router.put('/:id', UserController.updateUser);
+router.put('/:id', isAdminAuthenticated,UserController.updateUser);
 
 /**
  * @swagger
@@ -141,6 +142,38 @@ router.put('/:id', UserController.updateUser);
  *       404:
  *         description: User not found.
  */
-router.delete('/:id', UserController.deleteUser);
+router.delete('/:id', isAdminAuthenticated,UserController.deleteUser);
+
+
+
+
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     summary: Login a user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - user_name
+ *               - user_pass
+ *             properties:
+ *               user_name:
+ *                 type: string
+ *               user_pass:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful.
+ *       401:
+ *         description: Invalid credentials.
+ */
+router.post('/login', UserController.login);
+
 
 module.exports = router;

@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const {sequelize} = require('../config/db');
+const { sequelize } = require('../config/db');
 const Supplier = require('./Supplier');
 
 const Product = sequelize.define('Product', {
@@ -30,10 +30,12 @@ const Product = sequelize.define('Product', {
         type: DataTypes.INTEGER,
         defaultValue: 0,
     },
-
-    tableName: 'product', 
-    timestamps: false, 
-});
+},
+    {
+        tableName: 'product',
+        timestamps: false,
+    }
+);
 
 // Define associations
 Product.belongsTo(Supplier, { foreignKey: 'supplier_id' });

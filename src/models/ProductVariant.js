@@ -30,10 +30,12 @@ const ProductVariant = sequelize.define('ProductVariant', {
         type: DataTypes.INTEGER,
         defaultValue: 0,
     },
-
+},
+{
     tableName: 'product_variant', 
     timestamps: false, 
-});
+}
+);
 
 ProductVariant.belongsTo(Product, { foreignKey: 'product_id' });
 

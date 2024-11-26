@@ -18,8 +18,9 @@ const Customer = sequelize.define('Customer', {
         type: DataTypes.DOUBLE,
         defaultValue: 0.0,
     },
-    tableName: 'customer', 
-    timestamps: false, 
+}, {
+    tableName: 'customer',
+    timestamps: false,
 });
 
 module.exports = Customer;

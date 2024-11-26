@@ -3,25 +3,22 @@ const { Customer } = require('../models/Customer');  // Ensure this is the corre
 
 const createCustomer = async (req, res) => {
   try {
-    // Destructure the fields from the request body
-    const { customer_name, customer_phone, customer_debt } = req.body;
+    const { customer_name, customer_phone } = req.body;
 
-    // Check if required fields are provided
+    // Validate the input
     if (!customer_name || !customer_phone) {
-      return res.status(400).json({ message: 'Missing required fields' });
+      return res.status(400).json({ message: 'Customer name and phone are required' });
     }
 
-    // Create a new customer record
+    // Create the customer record
     const newCustomer = await Customer.create({
       customer_name,
       customer_phone,
-      customer_debt: customer_debt || 0,  // default to 0 if not provided
     });
 
     // Respond with the created customer
     return res.status(201).json(newCustomer);
   } catch (error) {
-    // Handle any errors that might occur during the database operation
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
   }

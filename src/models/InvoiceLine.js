@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const {sequelize} = require('../config/db');
+const { sequelize } = require('../config/db');
 const Invoice = require('./Invoice');
 const Product = require('./Product');
 const ProductVariant = require('./ProductVariant');
@@ -37,10 +37,12 @@ const InvoiceLine = sequelize.define('InvoiceLine', {
         type: DataTypes.DOUBLE,
         allowNull: false,
     },
-
-    tableName: 'invoice_line', 
-    timestamps: false, 
-});
+},
+    {
+        tableName: 'invoice_line',
+        timestamps: false,
+    }
+);
 
 // Define associations
 InvoiceLine.belongsTo(Product, { foreignKey: 'product_id' });

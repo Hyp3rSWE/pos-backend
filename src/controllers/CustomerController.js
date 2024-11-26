@@ -1,5 +1,25 @@
 const Customer = require("../models/Customer");
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Customer:
+ *       type: object
+ *       properties:
+ *         customer_id:
+ *           type: integer
+ *         customer_name:
+ *           type: string
+ *         customer_phone:
+ *           type: string
+ *         customer_debt:
+ *           type: number
+ *       required:
+ *         - customer_name
+ *         - customer_phone
+ */
+
 class CustomerController {
     // Get all customers
     static async getAllCustomers(req, res) {

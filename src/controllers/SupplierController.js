@@ -1,5 +1,23 @@
 const Supplier = require("../models/Supplier");
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Supplier:
+ *       type: object
+ *       properties:
+ *         supplier_id:
+ *           type: integer
+ *         supplier_name:
+ *           type: string
+ *         supplier_phone:
+ *           type: string
+ *       required:
+ *         - supplier_name
+ *         - supplier_phone
+ */
+
 class SupplierController {
     // Get all suppliers
     static async getAllSuppliers(req, res) {

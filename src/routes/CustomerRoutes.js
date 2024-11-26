@@ -15,15 +15,14 @@ const customerController = require('../controllers/CustomerController');
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               customer_name:
  *                 type: string
- *               email:
+ *               customer_phone:
  *                 type: string
- *                 format: email
- *               phone:
- *                 type: string
- *               address:
- *                 type: string
+ *               customer_debt:
+ *                 type: number
+ *                 format: double
+ *                 default: 0.0
  *     responses:
  *       201:
  *         description: Customer created successfully
@@ -89,15 +88,13 @@ router.get('/:id', customerController.getCustomerById);
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               customer_name:
  *                 type: string
- *               email:
+ *               customer_phone:
  *                 type: string
- *                 format: email
- *               phone:
- *                 type: string
- *               address:
- *                 type: string
+ *               customer_debt:
+ *                 type: number
+ *                 format: double
  *     responses:
  *       200:
  *         description: Customer updated successfully

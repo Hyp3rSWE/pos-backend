@@ -15,14 +15,9 @@ const supplierController = require('../controllers/SupplierController');
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               supplier_name:
  *                 type: string
- *               email:
- *                 type: string
- *                 format: email
- *               phone:
- *                 type: string
- *               address:
+ *               supplier_phone:
  *                 type: string
  *     responses:
  *       201:
@@ -89,14 +84,9 @@ router.get('/:id', supplierController.getSupplierById);
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               supplier_name:
  *                 type: string
- *               email:
- *                 type: string
- *                 format: email
- *               phone:
- *                 type: string
- *               address:
+ *               supplier_phone:
  *                 type: string
  *     responses:
  *       200:

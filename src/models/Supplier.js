@@ -14,6 +14,9 @@ const Supplier = sequelize.define('Supplier', {
     supplier_phone: {
         type: DataTypes.STRING(50),
     },
+
+    tableName: 'supplier', 
+        timestamps: false, 
 });
 
 module.exports = Supplier;

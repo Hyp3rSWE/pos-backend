@@ -1,4 +1,6 @@
 const express = require('express');
+const session = require('express-session');
+
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
@@ -38,9 +40,26 @@ const swaggerOptions = {
   apis: ['./src/routes/*.js'],
 };
 
+app.use(session({
+  secret: process.env.SECRET,  
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }  
+}));
+
+
+
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+
+app.use(session({
+  secret: process.env.SESSION_SECRET, 
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }  
+}));
 
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);

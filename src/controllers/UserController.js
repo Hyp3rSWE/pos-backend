@@ -95,6 +95,31 @@ class UserController {
             res.status(500).json({ error: 'Failed to delete user' });
         }
     }
+    static async login(req, res) {
+        const { user_name, user_pass } = req.body;
+    
+        try {
+            const user = await User.findOne({ where: { user_name } });
+            
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+    
+            // Compare password
+            const isMatch = await bcrypt.compare(user_pass, user.user_pass);
+            
+            if (!isMatch) {
+                return res.status(401).json({ error: 'Invalid password' });
+            }
+    
+            req.session.userId = user.user_id;
+            req.session.userRole = user.user_role;
+    
+            res.status(200).json({ message: 'Login successful' });
+        } catch (error) {
+            res.status(500).json({ error: 'Error during login' });
+        }
+    }
 }
 
 module.exports = UserController;

@@ -29,24 +29,27 @@ class UserController {
     static async createUser(req, res) {
         try {
             const { user_role, user_name, user_pass } = req.body;
-
+    
             if (!user_role || !user_name || !user_pass) {
                 return res.status(400).json({ error: 'All fields are required' });
             }
-
+    
             const hashedPassword = await bcrypt.hash(user_pass, 10);
-
+    
             const newUser = await User.create({
                 user_role,
                 user_name,
                 user_pass: hashedPassword,
             });
-
+    
             res.status(201).json({ message: 'User created successfully', user: newUser });
         } catch (error) {
-            res.status(500).json({ error: 'Failed to create user' });
+            console.error('Error during user creation:', error);
+    
+            res.status(500).json({ error: 'Failed to create user', details: error.message });
         }
     }
+    
 
     static async updateUser(req, res) {
         try {

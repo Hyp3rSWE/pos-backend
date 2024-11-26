@@ -35,6 +35,8 @@ const Invoice = sequelize.define('Invoice', {
         type: DataTypes.DOUBLE,
         allowNull: false,
     },
+    tableName: 'invoice', 
+    timestamps: false, 
 });
 
 // Define associations

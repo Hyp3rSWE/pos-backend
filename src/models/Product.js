@@ -30,6 +30,9 @@ const Product = sequelize.define('Product', {
         type: DataTypes.INTEGER,
         defaultValue: 0,
     },
+
+    tableName: 'product', 
+    timestamps: false, 
 });
 
 // Define associations

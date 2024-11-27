@@ -1,8 +1,13 @@
-const express = require('express');
-const InvoiceController = require('../controllers/InvoiceController');
-const { isAdminAuthenticated, isCashierAuthenticated } = require('../middleware/auth');
-
+const express = require("express");
 const router = express.Router();
+const InvoiceController = require("../controllers/InvoiceController");
+
+/**
+ * @swagger
+ * tags:
+ *   name: Invoices
+ *   description: Invoice management
+ */
 
 /**
  * @swagger
@@ -10,137 +15,197 @@ const router = express.Router();
  *   schemas:
  *     Invoice:
  *       type: object
+ *       properties:
+ *         invoice_id:
+ *           type: integer
+ *           description: The ID of the invoice
+ *         user_id:
+ *           type: integer
+ *           description: The ID of the user who created the invoice
+ *         customer_id:
+ *           type: integer
+ *           description: The ID of the customer for the invoice
+ *         invoice_total_amount:
+ *           type: number
+ *           format: double
+ *           description: The total amount of the invoice
+ *         invoice_paid_amount:
+ *           type: number
+ *           format: double
+ *           description: The amount already paid for the invoice
  *       required:
  *         - user_id
  *         - customer_id
  *         - invoice_total_amount
  *         - invoice_paid_amount
- *       properties:
- *         invoice_id:
- *           type: integer
- *           description: Auto-generated ID for the invoice
- *         user_id:
- *           type: integer
- *           description: ID of the user associated with the invoice
- *         customer_id:
- *           type: integer
- *           description: ID of the customer associated with the invoice
- *         invoice_total_amount:
- *           type: number
- *           description: Total amount of the invoice
- *         invoice_paid_amount:
- *           type: number
- *           description: Amount paid for the invoice
- *         invoice_lines:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/InvoiceLine'
+ *       example:
+ *         invoice_id: 1
+ *         user_id: 1
+ *         customer_id: 1
+ *         invoice_total_amount: 300.00
+ *         invoice_paid_amount: 150.00
  */
 
 /**
  * @swagger
- * tags:
- *   name: Invoices
- *   description: API for managing invoices
- */
+ * paths:
+ *   /invoices:
 
-/**
- * @swagger
- * /invoices:
- *   get:
- *     summary: Retrieve all invoices
- *     tags: [Invoices]
- *     responses:
- *       200:
- *         description: List of invoices
- */
-router.get('/invoices', isCashierAuthenticated,InvoiceController.getAllInvoices);
-
-/**
- * @swagger
- * /invoices/{id}:
- *   get:
- *     summary: Retrieve a specific invoice by ID
- *     tags: [Invoices]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
+ *     post:
+ *       summary: Create a new invoice along with invoice lines
+ *       tags: [Invoices]
+ *       requestBody:
  *         required: true
- *         description: ID of the invoice to retrieve
- *     responses:
- *       200:
- *         description: Invoice details
- *       404:
- *         description: Invoice not found
- */
-router.get('/invoices/:id', isCashierAuthenticated,InvoiceController.getInvoiceById);
-
-/**
- * @swagger
- * /invoices:
- *   post:
- *     summary: Create a new invoice
- *     tags: [Invoices]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user_id:
+ *                   type: integer
+ *                 customer_id:
+ *                   type: integer
+ *                 invoice_total_amount:
+ *                   type: number
+ *                   format: double
+ *                 invoice_paid_amount:
+ *                   type: number
+ *                   format: double
+ *                 invoice_lines:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       product_id:
+ *                         type: integer
+ *                       product_variant_id:
+ *                         type: integer
+ *                       invoice_line_quantity:
+ *                         type: integer
+ *                       invoice_line_price:
+ *                         type: number
+ *                         format: double
+ *       responses:
+ *         201:
+ *           description: The invoice has been created
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 $ref: '#/components/schemas/Invoice'
+ *           example:
+ *             invoice_id: 1
+ *             user_id: 1
+ *             customer_id: 1
+ *             invoice_total_amount: 300.00
+ *             invoice_paid_amount: 150.00
+ *         500:
+ *           description: Server error
+ *     get:
+ *       summary: Get all invoices
+ *       tags: [Invoices]
+ *       responses:
+ *         200:
+ *           description: A list of invoices
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: array
+ *                 items:
+ *                   $ref: '#/components/schemas/Invoice'
+ *           example:
+ *             - invoice_id: 1
+ *               user_id: 1
+ *               customer_id: 1
+ *               invoice_total_amount: 300.00
+ *               invoice_paid_amount: 150.00
+ *             - invoice_id: 2
+ *               user_id: 2
+ *               customer_id: 2
+ *               invoice_total_amount: 500.00
+ *               invoice_paid_amount: 200.00
+ *         500:
+ *           description: Server error 
+ *   /invoices/{invoice_id}:
+ *     get:
+ *       summary: Get an invoice by ID
+ *       tags: [Invoices]
+ *       parameters:
+ *         - in: path
+ *           name: invoice_id
+ *           required: true
+ *           description: The ID of the invoice
  *           schema:
- *             $ref: '#/components/schemas/Invoice'
- *     responses:
- *       201:
- *         description: Invoice created successfully
- */
-router.post('/invoices', isCashierAuthenticated,InvoiceController.createInvoice);
-
-/**
- * @swagger
- * /invoices/{id}:
- *   put:
- *     summary: Update an existing invoice
- *     tags: [Invoices]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID of the invoice to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
+ *             type: integer
+ *       responses:
+ *         200:
+ *           description: The invoice details
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 $ref: '#/components/schemas/Invoice'
+ *           example:
+ *             invoice_id: 1
+ *             user_id: 1
+ *             customer_id: 1
+ *             invoice_total_amount: 300.00
+ *             invoice_paid_amount: 150.00
+ *         404:
+ *           description: Invoice not found
+ *         500:
+ *           description: Server error
+ *     put:
+ *       summary: Update an existing invoice
+ *       tags: [Invoices]
+ *       parameters:
+ *         - in: path
+ *           name: invoice_id
+ *           required: true
+ *           description: The ID of the invoice to update
  *           schema:
- *             $ref: '#/components/schemas/Invoice'
- *     responses:
- *       200:
- *         description: Invoice updated successfully
- *       404:
- *         description: Invoice not found
- */
-router.put('/invoices/:id',isCashierAuthenticated, InvoiceController.updateInvoice);
-
-/**
- * @swagger
- * /invoices/{id}:
- *   delete:
- *     summary: Delete an invoice
- *     tags: [Invoices]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
+ *             type: integer
+ *       requestBody:
  *         required: true
- *         description: ID of the invoice to delete
- *     responses:
- *       200:
- *         description: Invoice deleted successfully
- *       404:
- *         description: Invoice not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 invoice_total_amount:
+ *                   type: number
+ *                   format: double
+ *                 invoice_paid_amount:
+ *                   type: number
+ *                   format: double
+ *       responses:
+ *         200:
+ *           description: The updated invoice
+ *         404:
+ *           description: Invoice not found
+ *         500:
+ *           description: Server error
+ *     delete:
+ *       summary: Delete an invoice
+ *       tags: [Invoices]
+ *       parameters:
+ *         - in: path
+ *           name: invoice_id
+ *           required: true
+ *           description: The ID of the invoice to delete
+ *           schema:
+ *             type: integer
+ *       responses:
+ *         204:
+ *           description: The invoice was deleted
+ *         404:
+ *           description: Invoice not found
+ *         500:
+ *           description: Server error
  */
-router.delete('/invoices/:id',isCashierAuthenticated, InvoiceController.deleteInvoice);
+
+router.get("/", InvoiceController.getAllInvoices);
+router.get("/:invoice_id", InvoiceController.getInvoiceById);
+router.post("/", InvoiceController.createInvoice);
+router.put("/:invoice_id", InvoiceController.updateInvoice);
+router.delete("/:invoice_id", InvoiceController.deleteInvoice);
 
 module.exports = router;

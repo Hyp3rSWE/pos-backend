@@ -1,127 +1,112 @@
-const Invoice = require('../models/Invoice');
-const InvoiceLine = require('../models/InvoiceLine');
-const User = require('../models/User');
-const Customer = require('../models/Customer');
-const Product = require('../models/Product');
-const ProductVariant = require('../models/ProductVariant');
+const { sequelize } = require("../config/db");
+const Invoice = require("../models/Invoice");
+const InvoiceLine = require("../models/InvoiceLine");
 
 class InvoiceController {
+    // Get all invoices
     static async getAllInvoices(req, res) {
         try {
-            const invoices = await Invoice.findAll({
-                include: [
-                    { model: User, attributes: ['user_name', 'user_role'] },
-                    { model: Customer, attributes: ['customer_name'] },
-                    {
-                        model: InvoiceLine,
-                        include: [
-                            { model: Product, attributes: ['product_name'] },
-                            { model: ProductVariant, attributes: ['variant_name'] },
-                        ],
-                    },
-                ],
-            });
-            res.status(200).json(invoices);
+            const invoices = await Invoice.findAll();
+            res.json(invoices);
         } catch (error) {
-            console.error('Error fetching invoices:', error);
-            res.status(500).json({ error: 'Failed to fetch invoices' });
+            res.status(500).json({ message: "Error fetching invoices", error });
         }
     }
 
+    // Get a single invoice by ID
     static async getInvoiceById(req, res) {
         try {
-            const { id } = req.params;
-            const invoice = await Invoice.findByPk(id, {
-                include: [
-                    { model: User, attributes: ['user_name', 'user_role'] },
-                    { model: Customer, attributes: ['customer_name'] },
-                    {
-                        model: InvoiceLine,
-                        include: [
-                            { model: Product, attributes: ['product_name'] },
-                            { model: ProductVariant, attributes: ['variant_name'] },
-                        ],
-                    },
-                ],
-            });
-
+            const invoice = await Invoice.findByPk(req.params.invoice_id);
             if (!invoice) {
-                return res.status(404).json({ error: 'Invoice not found' });
+                return res.status(404).json({ message: "Invoice not found" });
             }
-
-            res.status(200).json(invoice);
+            res.json(invoice);
         } catch (error) {
-            console.error('Error fetching invoice:', error);
-            res.status(500).json({ error: 'Failed to fetch invoice' });
+            res.status(500).json({ message: "Error fetching invoice", error });
         }
     }
 
+    // Create a new invoice
     static async createInvoice(req, res) {
-        const { user_id, customer_id, invoice_total_amount, invoice_paid_amount, invoice_lines } = req.body;
+        const {
+            invoice_total_amount,
+            invoice_paid_amount,
+            user_id,
+            customer_id,
+            invoice_lines,
+        } = req.body;
+
+        // Start a transaction to ensure both operations (invoice and invoice lines) are handled together
+        const t = await sequelize.transaction();
 
         try {
-            const invoice = await Invoice.create({
-                user_id,
-                customer_id,
-                invoice_total_amount,
-                invoice_paid_amount,
-            });
+            // Step 1: Create the invoice
+            const newInvoice = await Invoice.create(
+                {
+                    invoice_total_amount,
+                    invoice_paid_amount,
+                    user_id,
+                    customer_id,
+                },
+                { transaction: t }
+            );
 
-            // Create associated invoice lines if provided
-            if (Array.isArray(invoice_lines)) {
-                for (const line of invoice_lines) {
-                    await InvoiceLine.create({
-                        invoice_id: invoice.invoice_id,
+            // Step 2: Create the associated invoice lines
+            const invoiceLinePromises = invoice_lines.map((line) => {
+                return InvoiceLine.create(
+                    {
+                        invoice_id: newInvoice.invoice_id, // Use the generated invoice_id
                         product_id: line.product_id,
                         product_variant_id: line.product_variant_id,
                         invoice_line_quantity: line.invoice_line_quantity,
                         invoice_line_price: line.invoice_line_price,
-                    });
-                }
-            }
+                    },
+                    { transaction: t }
+                );
+            });
 
-            res.status(201).json({ message: 'Invoice created successfully', invoice });
+            // Wait for all invoice lines to be created
+            await Promise.all(invoiceLinePromises);
+
+            // Commit the transaction
+            await t.commit();
+
+            // Respond with the created invoice
+            res.status(201).json(newInvoice);
         } catch (error) {
-            console.error('Error creating invoice:', error);
-            res.status(500).json({ error: 'Failed to create invoice' });
+            // Rollback the transaction in case of an error
+            await t.rollback();
+            res.status(500).json({
+                message: "Error creating invoice and invoice lines",
+                error,
+            });
         }
     }
-
+    // Update an existing invoice
     static async updateInvoice(req, res) {
-        const { id } = req.params;
-        const { invoice_total_amount, invoice_paid_amount } = req.body;
-
         try {
-            const invoice = await Invoice.findByPk(id);
-
+            const invoice = await Invoice.findByPk(req.params.invoice_id);
             if (!invoice) {
-                return res.status(404).json({ error: 'Invoice not found' });
+                return res.status(404).json({ message: "Invoice not found" });
             }
-
-            await invoice.update({ invoice_total_amount, invoice_paid_amount });
-
-            res.status(200).json({ message: 'Invoice updated successfully', invoice });
+            await invoice.update(req.body);
+            res.json(invoice);
         } catch (error) {
-            console.error('Error updating invoice:', error);
-            res.status(500).json({ error: 'Failed to update invoice' });
+            res.status(500).json({ message: "Error updating invoice", error });
         }
     }
 
+    // Delete an invoice
     static async deleteInvoice(req, res) {
-        const { id } = req.params;
-
         try {
-            const invoice = await Invoice.findByPk(id);
-
+            const invoice = await Invoice.findByPk(req.params.invoice_id);
             if (!invoice) {
-                return res.status(404).json({ error: 'Invoice not found' });
+                return res.status(404).json({ message: "Invoice not found" });
             }
-
             await invoice.destroy();
-            res.status(200).json({ message: 'Invoice deleted successfully' });
+            res.status(204).send();
         } catch (error) {
-            console.error('Error deleting invoice:', error);
-            res.status(500).json({ error: 'Failed to delete invoice' });
+            res.status(500).json({ message: "Error deleting invoice", error });
         }
     }
 }

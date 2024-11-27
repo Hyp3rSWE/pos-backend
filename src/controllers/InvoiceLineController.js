@@ -1,106 +1,106 @@
-const InvoiceLine = require('../models/InvoiceLine');
-const Product = require('../models/Product');
-const ProductVariant = require('../models/ProductVariant');
-const Invoice = require('../models/Invoice');
+const InvoiceLine = require("../models/InvoiceLine");
 
 class InvoiceLineController {
+    // Get all invoice lines
     static async getAllInvoiceLines(req, res) {
         try {
-            const invoiceLines = await InvoiceLine.findAll({
-                include: [
-                    { model: Product, attributes: ['product_name'] },
-                    { model: ProductVariant, attributes: ['variant_name'] },
-                    { model: Invoice, attributes: ['invoice_id'] },
-                ],
-            });
-            res.status(200).json(invoiceLines);
+            const invoiceLines = await InvoiceLine.findAll();
+            res.json(invoiceLines);
         } catch (error) {
-            console.error('Error fetching invoice lines:', error);
-            res.status(500).json({ error: 'Failed to fetch invoice lines' });
+            res.status(500).json({
+                message: "Error fetching invoice lines",
+                error,
+            });
         }
     }
 
-    static async getInvoiceLine(req, res) {
+    // Get a single invoice line by composite key
+    static async getInvoiceLineById(req, res) {
         try {
             const { invoice_id, product_id, product_variant_id } = req.params;
             const invoiceLine = await InvoiceLine.findOne({
-                where: { invoice_id, product_id, product_variant_id },
-                include: [
-                    { model: Product, attributes: ['product_name'] },
-                    { model: ProductVariant, attributes: ['variant_name'] },
-                    { model: Invoice, attributes: ['invoice_id'] },
-                ],
+                where: {
+                    invoice_id,
+                    product_id,
+                    product_variant_id,
+                },
             });
-
             if (!invoiceLine) {
-                return res.status(404).json({ error: 'Invoice line not found' });
+                return res
+                    .status(404)
+                    .json({ message: "Invoice line not found" });
             }
-
-            res.status(200).json(invoiceLine);
+            res.json(invoiceLine);
         } catch (error) {
-            console.error('Error fetching invoice line:', error);
-            res.status(500).json({ error: 'Failed to fetch invoice line' });
+            res.status(500).json({
+                message: "Error fetching invoice line",
+                error,
+            });
         }
     }
 
+    // Create a new invoice line
     static async createInvoiceLine(req, res) {
         try {
-            const { product_id, invoice_id, product_variant_id, invoice_line_quantity, invoice_line_price } = req.body;
-
-            if (!product_id || !invoice_id || !product_variant_id || !invoice_line_quantity || !invoice_line_price) {
-                return res.status(400).json({ error: 'All fields are required' });
-            }
-
-            const invoiceLine = await InvoiceLine.create({
-                product_id,
-                invoice_id,
-                product_variant_id,
-                invoice_line_quantity,
-                invoice_line_price,
-            });
-
-            res.status(201).json({ message: 'Invoice line created successfully', invoiceLine });
+            const newInvoiceLine = await InvoiceLine.create(req.body);
+            res.status(201).json(newInvoiceLine);
         } catch (error) {
-            console.error('Error creating invoice line:', error);
-            res.status(500).json({ error: 'Failed to create invoice line' });
+            res.status(500).json({
+                message: "Error creating invoice line",
+                error,
+            });
         }
     }
 
+    // Update an existing invoice line
     static async updateInvoiceLine(req, res) {
         try {
             const { invoice_id, product_id, product_variant_id } = req.params;
-            const { invoice_line_quantity, invoice_line_price } = req.body;
-
-            const invoiceLine = await InvoiceLine.findOne({ where: { invoice_id, product_id, product_variant_id } });
-
+            const invoiceLine = await InvoiceLine.findOne({
+                where: {
+                    invoice_id,
+                    product_id,
+                    product_variant_id,
+                },
+            });
             if (!invoiceLine) {
-                return res.status(404).json({ error: 'Invoice line not found' });
+                return res
+                    .status(404)
+                    .json({ message: "Invoice line not found" });
             }
-
-            await invoiceLine.update({ invoice_line_quantity, invoice_line_price });
-
-            res.status(200).json({ message: 'Invoice line updated successfully', invoiceLine });
+            await invoiceLine.update(req.body);
+            res.json(invoiceLine);
         } catch (error) {
-            console.error('Error updating invoice line:', error);
-            res.status(500).json({ error: 'Failed to update invoice line' });
+            res.status(500).json({
+                message: "Error updating invoice line",
+                error,
+            });
         }
     }
 
+    // Delete an invoice line
     static async deleteInvoiceLine(req, res) {
         try {
             const { invoice_id, product_id, product_variant_id } = req.params;
-
-            const invoiceLine = await InvoiceLine.findOne({ where: { invoice_id, product_id, product_variant_id } });
-
+            const invoiceLine = await InvoiceLine.findOne({
+                where: {
+                    invoice_id,
+                    product_id,
+                    product_variant_id,
+                },
+            });
             if (!invoiceLine) {
-                return res.status(404).json({ error: 'Invoice line not found' });
+                return res
+                    .status(404)
+                    .json({ message: "Invoice line not found" });
             }
-
             await invoiceLine.destroy();
-            res.status(200).json({ message: 'Invoice line deleted successfully' });
+            res.status(204).send();
         } catch (error) {
-            console.error('Error deleting invoice line:', error);
-            res.status(500).json({ error: 'Failed to delete invoice line' });
+            res.status(500).json({
+                message: "Error deleting invoice line",
+                error,
+            });
         }
     }
 }

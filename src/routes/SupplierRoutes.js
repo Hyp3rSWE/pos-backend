@@ -1,6 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const supplierController = require('../controllers/SupplierController');
+const supplierController = require("../controllers/SupplierController");
 
 /**
  * @swagger
@@ -8,6 +8,38 @@ const supplierController = require('../controllers/SupplierController');
  *   name: Suppliers
  *   description: API for managing suppliers
  */
+
+/**
+ * @swagger
+ * /suppliers:
+ *   post:
+ *     summary: Create a new supplier
+ *     tags: [Suppliers]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               supplier_name:
+ *                 type: string
+ *               supplier_phone:
+ *                 type: string
+ *             required:
+ *               - supplier_name
+ *               - supplier_phone
+ *     responses:
+ *       201:
+ *         description: The supplier was created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Supplier'
+ *       500:
+ *         description: Server error
+ */
+router.post("/", supplierController.createSupplier);
 
 /**
  * @swagger
@@ -55,38 +87,6 @@ router.get("/", supplierController.getAllSuppliers);
  *         description: Server error
  */
 router.get("/:id", supplierController.getSupplierById);
-
-/**
- * @swagger
- * /suppliers:
- *   post:
- *     summary: Create a new supplier
- *     tags: [Suppliers]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               supplier_name:
- *                 type: string
- *               supplier_phone:
- *                 type: string
- *             required:
- *               - supplier_name
- *               - supplier_phone
- *     responses:
- *       201:
- *         description: The supplier was created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Supplier'
- *       500:
- *         description: Server error
- */
-router.post("/", supplierController.createSupplier);
 
 /**
  * @swagger

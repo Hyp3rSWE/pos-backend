@@ -1,7 +1,10 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const UserController = require('../controllers/UserController');
-const { isAdminAuthenticated, isCashierAuthenticated } = require('../middleware/auth');
+const UserController = require("../controllers/UserController");
+const {
+    isAdminAuthenticated,
+    isCashierAuthenticated,
+} = require("../middleware/auth");
 
 /**
  * @swagger
@@ -12,49 +15,31 @@ const { isAdminAuthenticated, isCashierAuthenticated } = require('../middleware/
 
 /**
  * @swagger
- * /users:
- *   get:
- *     summary: Get all users
+ * /users/login:
+ *   post:
+ *     summary: Login a user
  *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - user_name
+ *               - user_pass
+ *             properties:
+ *               user_name:
+ *                 type: string
+ *               user_pass:
+ *                 type: string
  *     responses:
  *       200:
- *         description: List of users.
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   user_id:
- *                     type: integer
- *                   user_role:
- *                     type: string
- *                   user_name:
- *                     type: string
+ *         description: Login successful.
+ *       401:
+ *         description: Invalid credentials.
  */
-router.get('/', isAdminAuthenticated,UserController.getAllUsers);
-
-/**
- * @swagger
- * /users/{id}:
- *   get:
- *     summary: Get a user by ID
- *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: The user ID
- *     responses:
- *       200:
- *         description: User data.
- *       404:
- *         description: User not found.
- */
-router.get('/:id', isAdminAuthenticated,UserController.getUserById);
+router.post("/login", UserController.login);
 
 /**
  * @swagger
@@ -87,7 +72,53 @@ router.get('/:id', isAdminAuthenticated,UserController.getUserById);
  *       400:
  *         description: Bad request.
  */
-router.post('/',isAdminAuthenticated, UserController.createUser);
+router.post("/", isAdminAuthenticated, UserController.createUser);
+
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: List of users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   user_id:
+ *                     type: integer
+ *                   user_role:
+ *                     type: string
+ *                   user_name:
+ *                     type: string
+ */
+router.get("/", isAdminAuthenticated, UserController.getAllUsers);
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Get a user by ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: User data.
+ *       404:
+ *         description: User not found.
+ */
+router.get("/:id", isAdminAuthenticated, UserController.getUserById);
 
 /**
  * @swagger
@@ -121,7 +152,7 @@ router.post('/',isAdminAuthenticated, UserController.createUser);
  *       404:
  *         description: User not found.
  */
-router.put('/:id', isAdminAuthenticated,UserController.updateUser);
+router.put("/:id", isAdminAuthenticated, UserController.updateUser);
 
 /**
  * @swagger
@@ -142,38 +173,6 @@ router.put('/:id', isAdminAuthenticated,UserController.updateUser);
  *       404:
  *         description: User not found.
  */
-router.delete('/:id', isAdminAuthenticated,UserController.deleteUser);
-
-
-
-
-/**
- * @swagger
- * /users/login:
- *   post:
- *     summary: Login a user
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - user_name
- *               - user_pass
- *             properties:
- *               user_name:
- *                 type: string
- *               user_pass:
- *                 type: string
- *     responses:
- *       200:
- *         description: Login successful.
- *       401:
- *         description: Invalid credentials.
- */
-router.post('/login', UserController.login);
-
+router.delete("/:id", isAdminAuthenticated, UserController.deleteUser);
 
 module.exports = router;

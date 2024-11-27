@@ -1,45 +1,6 @@
 const Product = require('../models/Product');
 const Supplier = require('../models/Supplier');
 
-/**
- * @swagger
- * tags:
- *   name: Product
- *   description: The products managing API
- */
-
-/**
- * @swagger
- * /products:
- *   post:
- *     summary: Create a new product
- *     tags: [Product]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               supplier_id:
- *                 type: integer
- *               product_barcode:
- *                 type: string
- *               product_price:
- *                 type: number
- *                 format: float
- *               product_name:
- *                 type: string
- *               product_stock_level:
- *                 type: integer
- *     responses:
- *       201:
- *         description: Product created successfully
- *       404:
- *         description: Supplier not found
- *       500:
- *         description: Internal server error
- */
 
 
 // Create a new product

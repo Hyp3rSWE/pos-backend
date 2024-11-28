@@ -1,13 +1,20 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const customerController = require('../controllers/CustomerController');
+const customerController = require("../controllers/CustomerController");
+
+/**
+ * @swagger
+ * tags:
+ *   name: Customers
+ *   description: Customers endpoints
+ */
 
 /**
  * @swagger
  * /customers:
  *   post:
  *     summary: Create a new customer
- *     tags: [Customer]
+ *     tags: [Customers]
  *     requestBody:
  *       required: true
  *       content:
@@ -29,28 +36,28 @@ const customerController = require('../controllers/CustomerController');
  *       500:
  *         description: Internal server error
  */
-router.post('/', customerController.createCustomer);
+router.post("/", customerController.createCustomer);
 
 /**
  * @swagger
  * /customers:
  *   get:
  *     summary: Get all customers
- *     tags: [Customer]
+ *     tags: [Customers]
  *     responses:
  *       200:
  *         description: A list of customers
  *       500:
  *         description: Internal server error
  */
-router.get('/', customerController.getAllCustomers);
+router.get("/", customerController.getAllCustomers);
 
 /**
  * @swagger
  * /customers/{id}:
  *   get:
  *     summary: Get a customer by ID
- *     tags: [Customer]
+ *     tags: [Customers]
  *     parameters:
  *       - in: path
  *         name: id
@@ -66,14 +73,14 @@ router.get('/', customerController.getAllCustomers);
  *       500:
  *         description: Internal server error
  */
-router.get('/:id', customerController.getCustomerById);
+router.get("/:id", customerController.getCustomerById);
 
 /**
  * @swagger
  * /customers/{id}:
  *   put:
  *     summary: Update a customer by ID
- *     tags: [Customer]
+ *     tags: [Customers]
  *     parameters:
  *       - in: path
  *         name: id
@@ -103,14 +110,14 @@ router.get('/:id', customerController.getCustomerById);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', customerController.updateCustomer);
+router.put("/:id", customerController.updateCustomer);
 
 /**
  * @swagger
  * /customers/{id}:
  *   delete:
  *     summary: Delete a customer by ID
- *     tags: [Customer]
+ *     tags: [Customers]
  *     parameters:
  *       - in: path
  *         name: id
@@ -126,6 +133,6 @@ router.put('/:id', customerController.updateCustomer);
  *       500:
  *         description: Internal server error
  */
-router.delete('/:id', customerController.deleteCustomer);
+router.delete("/:id", customerController.deleteCustomer);
 
 module.exports = router;

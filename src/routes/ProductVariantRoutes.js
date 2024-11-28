@@ -11,7 +11,7 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: ProductVariants
- *   description: API for managing product variants
+ *   description: product-variants endpoints
  */
 
 /**

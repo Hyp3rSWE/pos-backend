@@ -6,7 +6,7 @@ const supplierController = require("../controllers/SupplierController");
  * @swagger
  * tags:
  *   name: Suppliers
- *   description: API for managing suppliers
+ *   description: suppliers endpoints
  */
 
 /**

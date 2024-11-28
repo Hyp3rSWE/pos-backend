@@ -6,7 +6,7 @@ const InvoiceLineController = require("../controllers/InvoiceLineController");
  * @swagger
  * tags:
  *   name: InvoiceLines
- *   description: Manage invoice lines for invoices
+ *   description: Invoice lines endpoints
  */
 
 /**

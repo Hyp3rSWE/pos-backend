@@ -6,51 +6,13 @@ const InvoiceController = require("../controllers/InvoiceController");
  * @swagger
  * tags:
  *   name: Invoices
- *   description: Invoice management
- */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Invoice:
- *       type: object
- *       properties:
- *         invoice_id:
- *           type: integer
- *           description: The ID of the invoice
- *         user_id:
- *           type: integer
- *           description: The ID of the user who created the invoice
- *         customer_id:
- *           type: integer
- *           description: The ID of the customer for the invoice
- *         invoice_total_amount:
- *           type: number
- *           format: double
- *           description: The total amount of the invoice
- *         invoice_paid_amount:
- *           type: number
- *           format: double
- *           description: The amount already paid for the invoice
- *       required:
- *         - user_id
- *         - customer_id
- *         - invoice_total_amount
- *         - invoice_paid_amount
- *       example:
- *         invoice_id: 1
- *         user_id: 1
- *         customer_id: 1
- *         invoice_total_amount: 300.00
- *         invoice_paid_amount: 150.00
+ *   description: Invoice endpoints
  */
 
 /**
  * @swagger
  * paths:
  *   /invoices:
-
  *     post:
  *       summary: Create a new invoice along with invoice lines
  *       tags: [Invoices]
@@ -124,7 +86,7 @@ const InvoiceController = require("../controllers/InvoiceController");
  *               invoice_total_amount: 500.00
  *               invoice_paid_amount: 200.00
  *         500:
- *           description: Server error 
+ *           description: Server error
  *   /invoices/{invoice_id}:
  *     get:
  *       summary: Get an invoice by ID

@@ -8,10 +8,17 @@ const {
 
 /**
  * @swagger
+ * tags:
+ *   name: Products
+ *   description: Customers endpoints
+ */
+
+/**
+ * @swagger
  * /products:
  *   post:
  *     summary: Create a new product
- *     tags: [Product]
+ *     tags: [Products]
  *     requestBody:
  *       required: true
  *       content:
@@ -45,7 +52,7 @@ router.post("/", isAdminAuthenticated, productController.createProduct);
  * /products:
  *   get:
  *     summary: Get all products
- *     tags: [Product]
+ *     tags: [Products]
  *     responses:
  *       200:
  *         description: A list of products
@@ -59,7 +66,7 @@ router.get("/", isAdminAuthenticated, productController.getAllProducts);
  * /products/{id}:
  *   get:
  *     summary: Get a product by ID
- *     tags: [Product]
+ *     tags: [Products]
  *     parameters:
  *       - in: path
  *         name: id
@@ -82,7 +89,7 @@ router.get("/:id", isAdminAuthenticated, productController.getProductById);
  * /products/{id}:
  *   put:
  *     summary: Update a product by ID
- *     tags: [Product]
+ *     tags: [Products]
  *     parameters:
  *       - in: path
  *         name: id
@@ -123,7 +130,7 @@ router.put("/:id", isAdminAuthenticated, productController.updateProduct);
  * /products/{id}:
  *   delete:
  *     summary: Delete a product by ID
- *     tags: [Product]
+ *     tags: [Products]
  *     parameters:
  *       - in: path
  *         name: id

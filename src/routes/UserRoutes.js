@@ -10,7 +10,7 @@ const {
  * @swagger
  * tags:
  *   name: Users
- *   description: User management APIs
+ *   description: users endpoints
  */
 
 /**

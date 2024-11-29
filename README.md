@@ -14,7 +14,45 @@
 This is the backend for a Point-of-Sale (POS) system. It provides API endpoints for managing customers, suppliers, products, invoices, and more.
 
 ## Project Structure
-
+```
+pos-backend
+├── package-lock.json
+├── package.json
+└── src
+    ├── app.js
+    ├── config
+    │   ├── db.js
+    │   └── db.sql
+    ├── controllers
+    │   ├── CustomerController.js
+    │   ├── InvoiceController.js
+    │   ├── InvoiceLineController.js
+    │   ├── ProductController.js
+    │   ├── ProductVariantController.js
+    │   ├── SupplierController.js
+    │   └── UserController.js
+    ├── middleware
+    │   └── auth.js
+    ├── models
+    │   ├── Customer.js
+    │   ├── Invoice.js
+    │   ├── InvoiceLine.js
+    │   ├── Product.js
+    │   ├── ProductVariant.js
+    │   ├── Supplier.js
+    │   └── User.js
+    ├── routes
+    │   ├── CustomerRoutes.js
+    │   ├── InvoiceLineRoutes.js
+    │   ├── InvoiceRoutes.js
+    │   ├── ProductRoutes.js
+    │   ├── ProductVariantRoutes.js
+    │   ├── SupplierRoutes.js
+    │   └── UserRoutes.js
+    ├── server.js
+    ├── services
+    └── utils
+```
 
 ## Installation
 1. Clone the repository:

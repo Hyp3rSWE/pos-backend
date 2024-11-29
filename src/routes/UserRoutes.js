@@ -1,10 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const UserController = require("../controllers/UserController");
-const {
-    isAdminAuthenticated,
-    isCashierAuthenticated,
-} = require("../middleware/auth");
+
 
 /**
  * @swagger
@@ -72,7 +69,7 @@ router.post("/login", UserController.login);
  *       400:
  *         description: Bad request.
  */
-router.post("/", isAdminAuthenticated, UserController.createUser);
+router.post("/", UserController.createUser);
 
 /**
  * @swagger
@@ -97,7 +94,7 @@ router.post("/", isAdminAuthenticated, UserController.createUser);
  *                   user_name:
  *                     type: string
  */
-router.get("/", isAdminAuthenticated, UserController.getAllUsers);
+router.get("/", UserController.getAllUsers);
 
 /**
  * @swagger
@@ -118,7 +115,7 @@ router.get("/", isAdminAuthenticated, UserController.getAllUsers);
  *       404:
  *         description: User not found.
  */
-router.get("/:id", isAdminAuthenticated, UserController.getUserById);
+router.get("/:id", UserController.getUserById);
 
 /**
  * @swagger
@@ -152,7 +149,7 @@ router.get("/:id", isAdminAuthenticated, UserController.getUserById);
  *       404:
  *         description: User not found.
  */
-router.put("/:id", isAdminAuthenticated, UserController.updateUser);
+router.put("/:id", UserController.updateUser);
 
 /**
  * @swagger
@@ -173,6 +170,6 @@ router.put("/:id", isAdminAuthenticated, UserController.updateUser);
  *       404:
  *         description: User not found.
  */
-router.delete("/:id", isAdminAuthenticated, UserController.deleteUser);
+router.delete("/:id", UserController.deleteUser);
 
 module.exports = router;

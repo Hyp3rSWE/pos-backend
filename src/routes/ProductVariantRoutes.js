@@ -1,9 +1,6 @@
 const express = require("express");
 const ProductVariantController = require("../controllers/ProductVariantController");
-const {
-    isAdminAuthenticated,
-    isCashierAuthenticated,
-} = require("../middleware/auth");
+
 
 const router = express.Router();
 

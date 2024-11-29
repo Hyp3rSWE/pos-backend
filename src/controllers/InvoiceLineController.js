@@ -3,6 +3,7 @@ const Product = require('../models/Product');
 const ProductVariant = require('../models/ProductVariant');
 const Invoice = require('../models/Invoice');
 
+
 class InvoiceLineController {
     static async getAllInvoiceLines(req, res) {
         try {

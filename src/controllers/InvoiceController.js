@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Customer = require('../models/Customer');
 const Product = require('../models/Product');
 const ProductVariant = require('../models/ProductVariant');
+const sequelize = require('sequelize');
 
 class InvoiceController {
     static async getAllInvoices(req, res) {
@@ -57,31 +58,33 @@ class InvoiceController {
     }
 
     static async createInvoice(req, res) {
-        const { user_id, customer_id, invoice_total_amount, invoice_paid_amount, invoice_lines } = req.body;
-
+        const t = await sequelize.transaction();
         try {
+            const { user_id, customer_id, invoice_total_amount, invoice_paid_amount, invoice_lines } = req.body;
+
             const invoice = await Invoice.create({
                 user_id,
                 customer_id,
                 invoice_total_amount,
                 invoice_paid_amount,
-            });
+            }, { transaction: t });
 
-            // Create associated invoice lines if provided
             if (Array.isArray(invoice_lines)) {
-                for (const line of invoice_lines) {
-                    await InvoiceLine.create({
+                await Promise.all(invoice_lines.map(line => 
+                    InvoiceLine.create({
                         invoice_id: invoice.invoice_id,
                         product_id: line.product_id,
                         product_variant_id: line.product_variant_id,
                         invoice_line_quantity: line.invoice_line_quantity,
                         invoice_line_price: line.invoice_line_price,
-                    });
-                }
+                    }, { transaction: t })
+                ));
             }
 
+            await t.commit();
             res.status(201).json({ message: 'Invoice created successfully', invoice });
         } catch (error) {
+            await t.rollback();
             console.error('Error creating invoice:', error);
             res.status(500).json({ error: 'Failed to create invoice' });
         }

@@ -83,7 +83,7 @@ SECRET=a2d8f37c41e9eaa2fe39fb4c6f6e7e79b7f1e9d9b0e5e6d5b951c5d55cb684e1
 The database schema is defined in the file [`src/config/db.sql`](src/config/db.sql). It includes tables for customers, users, suppliers, products, product variants, invoices, and invoice lines.
 
 ## API Endpoints
-Run the project and visit [`localhost:3000/api-docs`](localhost:3000/api-docs) for the API documentation
+Run the project and visit [`localhost:3000/api-docs`](http://localhost:3000/api-docs) for the API documentation
 
 ## Useful Commands
 - Start the server:

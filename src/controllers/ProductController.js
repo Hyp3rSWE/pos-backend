@@ -59,6 +59,28 @@ exports.getProductById = async (req, res) => {
     }
 };
 
+
+
+// Get a product by barcode
+exports.getProductByBarcode = async (req, res) => {
+    try {
+        const { barcode } = req.params;
+        const product = await Product.findOne({
+            where: { product_barcode: barcode },
+            include: { model: Supplier, attributes: ['supplier_name'] },
+        });
+
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching product by barcode', error: error.message });
+    }
+};
+
+
 // Update a product
 exports.updateProduct = async (req, res) => {
     try {

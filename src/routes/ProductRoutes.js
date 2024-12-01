@@ -81,6 +81,31 @@ router.get("/", productController.getAllProducts);
  */
 router.get("/:id", productController.getProductById);
 
+
+/**
+ * @swagger
+ * /products/barcode/{barcode}:
+ *   get:
+ *     summary: Get a product by barcode
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: barcode
+ *         required: true
+ *         description: The product barcode
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: A product object
+ *       404:
+ *         description: Product not found
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/barcode/:barcode", productController.getProductByBarcode);
+
+
 /**
  * @swagger
  * /products/{id}:

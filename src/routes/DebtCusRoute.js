@@ -11,6 +11,7 @@ const {
 const router = express.Router();
 
 router.get('/', getAllDebts);
+
 router.get('/:id', getDebtByCus);
 router.post('/', createDebt);
 router.put('/:id/:time', updateDebt);

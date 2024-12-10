@@ -1,17 +1,17 @@
 # Test Get All Invoice Supplies
-GET http://localhost:3000/api/invoiceSupp
+GET http://localhost:3000/customers
 Accept: application/json
 
 ###
 
 # Test Get Invoice Supply by ID
-GET http://localhost:3000/api/invoiceSupp/1
+GET http://localhost:3000/invoice-lines
 Accept: application/json
 
 ###
 
 # Test Create Invoice Supply
-POST http://localhost:3000/api/invoiceSupp
+GET http://localhost:3000/invoices
 Content-Type: application/json
 
 {
@@ -24,7 +24,7 @@ Content-Type: application/json
 ###
 
 # Test Update Invoice Supply by ID
-PUT http://localhost:3000/api/invoiceSupp/1
+GET http://localhost:3000/invoice-sup-lines
 Content-Type: application/json
 
 {
@@ -38,3 +38,34 @@ Content-Type: application/json
 
 # Test Delete Invoice Supply by ID
 DELETE http://localhost:3000/api/invoiceSupp/1
+
+
+###
+
+# Test Update Invoice Supply by ID
+GET http://localhost:3000/invoices-sup
+Content-Type: application/json
+
+{
+  "supplier_id": 1,
+  "product_id": 3,
+  "quantity": 15,
+  "unitPrice": 120.75
+}
+
+###
+
+###
+
+# Test Update Invoice Supply by ID
+GET http://localhost:3000/debt-sup/2
+Content-Type: application/json
+
+{
+  "supplier_id": 1,
+  "product_id": 3,
+  "quantity": 15,
+  "unitPrice": 120.75
+}
+
+###

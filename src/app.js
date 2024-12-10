@@ -99,11 +99,11 @@ app.use("/customers", customerRoutes);
 app.use("/products", productRoutes);
 app.use("/product-variants", productVariantRoutes);
 app.use("/invoices", invoiceRoutes);
-app.use("/", invoiceLineRoutes);
+
 app.use("/invoice-lines", invoiceLineRoutes);
 
 app.use("/invoices-sup", invoiceSupRoutes);
-app.use("/", invoiceLineSupRoutes);
+
 app.use("/invoice-sup-lines", invoiceLineSupRoutes);
 
 

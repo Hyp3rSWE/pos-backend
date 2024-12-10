@@ -6,7 +6,7 @@ const Supplier = require("./Supplier");
 
 
 const InvoiceSup = sequelize.define(
-    "Invoice_sup",
+    "invoice_sup",
     {
         invoice_sup_id: {
             type: DataTypes.INTEGER,
@@ -32,7 +32,7 @@ const InvoiceSup = sequelize.define(
        
     },
     {
-        tableName: "invoice",
+        tableName: "invoice_sup",
         timestamps: false,
     }
 );

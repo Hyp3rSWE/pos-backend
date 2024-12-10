@@ -4,7 +4,7 @@ const InvoiceCus = require('./Invoice');
 const Product = require('./Product');
 const ProductVariant = require('./ProductVariant');
 
-const InvoiceLineCus = sequelize.define('InvoiceLine_cus', {
+const InvoiceLineCus = sequelize.define('invoice_line_cus', {
     product_id: {
         type: DataTypes.INTEGER,
         references: {
@@ -39,7 +39,7 @@ const InvoiceLineCus = sequelize.define('InvoiceLine_cus', {
     },
 },
     {
-        tableName: 'invoice_cus_line',
+        tableName: 'invoice_line_cus',
         timestamps: false,
     }
 );

@@ -4,15 +4,15 @@ const Customer = require('../models/Customer');
 // CREATE a new debt record
 const createDebt = async (req, res) => {
     try {
-        const { customer_id, dept_cus_amount } = req.body;
+        const { customer_id, debt_cus_amount } = req.body;
         
-        if (!customer_id || !dept_cus_amount) {
+        if (!customer_id || !debt_cus_amount) {
             return res.status(400).json({ message: 'Customer ID and debt amount are required.' });
         }
 
         const newDebt = await DebtCus.create({
             customer_id,
-            dept_cus_amount,
+            debt_cus_amount,
         });
 
         res.status(201).json(newDebt);
@@ -68,7 +68,7 @@ const getDebtByCus = async (req, res) => {
 const updateDebt = async (req, res) => {
     try {
         const { id } = req.params;
-        const { customer_id, dept_cus_amount } = req.body;
+        const { customer_id, debt_cus_amount } = req.body;
 
         const debt = await DebtCus.findByPk(id);
 
@@ -77,7 +77,7 @@ const updateDebt = async (req, res) => {
         }
 
         debt.customer_id = customer_id || debt.customer_id;
-        debt.dept_cus_amount = dept_cus_amount || debt.dept_cus_amount;
+        debt.debt_cus_amount = debt_cus_amount || debt.debt_cus_amount;
 
         await debt.save();
         res.status(200).json(debt);

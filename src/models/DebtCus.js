@@ -2,22 +2,27 @@ const { sequelize } = require('../config/db');
 const { DataTypes } = require('sequelize');
 const Customer = require('./Customer');
 
-const DebtCus = sequelize.define('DebtCus', {
+const DebtCus = sequelize.define('debt_cus', {
 
     customer_id: {
         type: DataTypes.INTEGER,
+        references : {
+            model : Customer,key:'customer_id'
+        },
+        primaryKey : true 
     },
-    dept_cus_amount: {
+    debt_cus_amount: {
         type: DataTypes.DOUBLE,
     },
-    dept_cus_timestamp: {
+    debt_cus_timestamp: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: sequelize.NOW, 
+        defaultValue: sequelize.NOW,
+        primaryKey : true 
     },
 
 }, {
-    tableName: 'DebtCus',
+    tableName: 'debt_cus',
     timestamps: false,
 });
 

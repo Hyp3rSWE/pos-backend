@@ -6,7 +6,7 @@ const Customer = require("./Customer");
 const InvoiceCus = sequelize.define(
     "Invoice_cus",
     {
-        invoice_id: {
+        invoice_cus_id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
@@ -30,7 +30,7 @@ const InvoiceCus = sequelize.define(
        
     },
     {
-        tableName: "invoice",
+        tableName: "invoice_cus",
         timestamps: false,
     }
 );

@@ -4,7 +4,7 @@ const InvoiceSup = require('./Invoice');
 const Product = require('./Product');
 const ProductVariant = require('./ProductVariant');
 
-const InvoiceLineSup = sequelize.define('InvoiceLine_sup', {
+const InvoiceLineSup = sequelize.define('invoice-line_sup', {
     product_id: {
         type: DataTypes.INTEGER,
         references: {
@@ -39,7 +39,7 @@ const InvoiceLineSup = sequelize.define('InvoiceLine_sup', {
     },
 },
     {
-        tableName: 'invoice_sup_line',
+        tableName: 'invoice_line_sup',
         timestamps: false,
     }
 );

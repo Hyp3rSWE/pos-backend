@@ -4,15 +4,15 @@ const Supplier = require('../models/Supplier');
 // CREATE a new debt record
 const createDebt = async (req, res) => {
     try {
-        const { supplier_id, dept_sup_amount } = req.body;
+        const { supplier_id, debt_sup_amount } = req.body;
         
-        if (!supplier_id || !dept_sup_amount) {
+        if (!supplier_id || !debt_sup_amount) {
             return res.status(400).json({ message: 'Supplier ID and debt amount are required.' });
         }
 
         const newDebt = await DebtSup.create({
             supplier_id,
-            dept_sup_amount,
+            debt_sup_amount,
         });
 
         res.status(201).json(newDebt);
@@ -67,7 +67,7 @@ const getDebtBySup = async (req, res) => {
 const updateDebt = async (req, res) => {
     try {
         const { id } = req.params;
-        const { supplier_id, dept_sup_amount } = req.body;
+        const { supplier_id, debt_sup_amount } = req.body;
 
         const debt = await DebtSup.findByPk(id);
 
@@ -76,7 +76,7 @@ const updateDebt = async (req, res) => {
         }
 
         debt.supplier_id = supplier_id || debt.supplier_id;
-        debt.dept_sup_amount = dept_sup_amount || debt.dept_sup_amount;
+        debt.debt_sup_amount = debt_sup_amount || debt.debt_sup_amount;
 
         await debt.save();
         res.status(200).json(debt);

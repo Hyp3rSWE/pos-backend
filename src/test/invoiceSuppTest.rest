@@ -37,7 +37,7 @@ Content-Type: application/json
 ###
 
 # Test Delete Invoice Supply by ID
-DELETE http://localhost:3000/api/invoiceSupp/1
+DELETE http://localhost:3000/invoice-sup/1
 
 
 ###

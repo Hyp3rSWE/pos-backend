@@ -1,0 +1,40 @@
+# Get all product variants
+GET http://localhost:3000/product-variants
+Content-Type: application/json
+
+###
+
+# Get a product variant by ID
+GET http://localhost:3000/product-variants/1
+Content-Type: application/json
+
+###
+
+# Create a new product variant
+POST http://localhost:3000/product-variants
+Content-Type: application/json
+
+{
+    "product_id": 1,  # Ensure this product_id exists
+    "variant_barcode": "9876543210",
+    "variant_price": 150.00,
+    "variant_quantity": 100,
+    "variant_stock_level": 80
+}
+
+###
+
+# Update an existing product variant
+PUT http://localhost:3000/product-variants/1
+Content-Type: application/json
+
+{
+    "variant_price": 180.00,
+    "variant_stock_level": 90
+}
+
+###
+
+# Delete a product variant
+DELETE http://localhost:3000/product-variants/1
+Content-Type: application/json

@@ -1,0 +1,39 @@
+# Get all suppliers
+GET http://localhost:3000/suppliers
+Content-Type: application/json
+
+###
+
+# Get a supplier by ID
+GET http://localhost:3000/suppliers/1
+Content-Type: application/json
+
+###
+
+# Create a new supplier
+POST http://localhost:3000/suppliers
+Content-Type: application/json
+
+{
+    "supplier_name": "Supplier A",
+    "supplier_phone": "123-456-7890",
+    "supplier_debt": 1500.50
+}
+
+###
+
+# Update an existing supplier
+PUT http://localhost:3000/suppliers/1
+Content-Type: application/json
+
+{
+    "supplier_name": "Updated Supplier A",
+    "supplier_phone": "098-765-4321",
+    "supplier_debt": 1200.00
+}
+
+###
+
+# Delete a supplier
+DELETE http://localhost:3000/suppliers/1
+Content-Type: application/json

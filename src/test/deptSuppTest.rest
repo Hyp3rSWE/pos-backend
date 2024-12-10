@@ -1,37 +1,30 @@
-# Create a new debt record
-POST http://localhost:3000/debts
+### Create a new debt record
+POST http://localhost:3000/debt-sup
 Content-Type: application/json
 
 {
-    "customer_id": 1,
-    "debt_cus_amount": 100.50
+  "supplier_id": 1,
+  "debt_sup_amount": 5000,
+  "debt_sup_timestamp": 20
 }
 
-###
+### Get all debt records
+GET http://localhost:3000/debt-sup
 
-# Get all debt records
-GET http://localhost:3000/debts
-Content-Type: application/json
+### Get a single debt record by ID
+GET http://localhost:3000/debt-sup/1
 
-###
-
-# Get a single debt record by ID
-GET http://localhost:3000/debts/1
-Content-Type: application/json
-
-###
-
-# Update a debt record
-PUT http://localhost:3000/debts/1
+### Update a debt record
+PUT http://localhost:3000/debt-sup/1
 Content-Type: application/json
 
 {
-    "customer_id": 1,
-    "debt_cus_amount": 200.75
+  "supplier_id": 2,
+  "debt_sup_amount": 6000
 }
 
-###
+### Delete a debt record
+DELETE http://localhost:3000/debt-sup/1
 
-# Delete a debt record
-DELETE http://localhost:3000/debts/1
-Content-Type: application/json
+
+

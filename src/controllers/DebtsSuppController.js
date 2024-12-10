@@ -4,15 +4,16 @@ const Supplier = require('../models/Supplier');
 // CREATE a new debt record
 const createDebt = async (req, res) => {
     try {
-        const { supplier_id, debt_sup_amount } = req.body;
+        const { supplier_id, debt_sup_amount , debt_sup_timestamp } = req.body;
         
-        if (!supplier_id || !debt_sup_amount) {
+        if (!supplier_id || !debt_sup_amount || !debt_sup_timestamp) {
             return res.status(400).json({ message: 'Supplier ID and debt amount are required.' });
         }
 
         const newDebt = await DebtSup.create({
             supplier_id,
             debt_sup_amount,
+            debt_sup_timestamp,
         });
 
         res.status(201).json(newDebt);

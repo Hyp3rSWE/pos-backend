@@ -4,15 +4,16 @@ const Customer = require('../models/Customer');
 // CREATE a new debt record
 const createDebt = async (req, res) => {
     try {
-        const { customer_id, debt_cus_amount } = req.body;
+        const { customer_id, debt_cus_amount  ,debt_cus_timestamp} = req.body;
         
-        if (!customer_id || !debt_cus_amount) {
+        if (!customer_id || !debt_cus_amount || !debt_cus_timestamp) {
             return res.status(400).json({ message: 'Customer ID and debt amount are required.' });
         }
 
         const newDebt = await DebtCus.create({
             customer_id,
             debt_cus_amount,
+            debt_cus_timestamp,
         });
 
         res.status(201).json(newDebt);

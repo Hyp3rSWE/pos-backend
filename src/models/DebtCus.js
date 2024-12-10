@@ -13,7 +13,7 @@ const DebtCus = sequelize.define('DebtCus', {
     dept_cus_timestamp: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW, 
+        defaultValue: sequelize.NOW, 
     },
 
 }, {
@@ -21,6 +21,6 @@ const DebtCus = sequelize.define('DebtCus', {
     timestamps: false,
 });
 
-invoiceSupp.belongsTo(Customer, { foreignKey: 'customer_id' });
+DebtCus.belongsTo(Customer, { foreignKey: 'customer_id' });
 
 module.exports = DebtCus;

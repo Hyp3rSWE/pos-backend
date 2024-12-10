@@ -1,18 +1,18 @@
-const DebtCus = require('../models/DebtCus');
-const Customer = require('../models/Customer');
+const DebtSup = require('../models/DebtSup');
+const Supplier = require('../models/Supplier');
 
 // CREATE a new debt record
 const createDebt = async (req, res) => {
     try {
-        const { customer_id, dept_cus_amount } = req.body;
+        const { supplier_id, dept_sup_amount } = req.body;
         
-        if (!customer_id || !dept_cus_amount) {
-            return res.status(400).json({ message: 'Customer ID and debt amount are required.' });
+        if (!supplier_id || !dept_sup_amount) {
+            return res.status(400).json({ message: 'Supplier ID and debt amount are required.' });
         }
 
-        const newDebt = await DebtCus.create({
-            customer_id,
-            dept_cus_amount,
+        const newDebt = await DebtSup.create({
+            supplier_id,
+            dept_sup_amount,
         });
 
         res.status(201).json(newDebt);
@@ -24,11 +24,11 @@ const createDebt = async (req, res) => {
 // READ all debt records
 const getAllDebts = async (req, res) => {
     try {
-        const debts = await DebtCus.findAll({
+        const debts = await DebtSup.findAll({
             include: [
                 {
-                    model: Customer,
-                    as: 'Customer', 
+                    model: Supplier,
+                    as: 'Supplier', 
                 },
             ],
         });
@@ -39,17 +39,16 @@ const getAllDebts = async (req, res) => {
     }
 };
 
-
 // READ a single debt record by ID
-const getDebtByCus = async (req, res) => {
+const getDebtBySup = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const debt = await DebtCus.findByPk(id, {
+        const debt = await DebtSup.findByPk(id, {
             include: [
                 {
-                    model: Customer,
-                    as: 'Customer',
+                    model: Supplier,
+                    as: 'Supplier',
                 },
             ],
         });
@@ -68,16 +67,16 @@ const getDebtByCus = async (req, res) => {
 const updateDebt = async (req, res) => {
     try {
         const { id } = req.params;
-        const { customer_id, dept_cus_amount } = req.body;
+        const { supplier_id, dept_sup_amount } = req.body;
 
-        const debt = await DebtCus.findByPk(id);
+        const debt = await DebtSup.findByPk(id);
 
         if (!debt) {
             return res.status(404).json({ message: 'Debt record not found.' });
         }
 
-        debt.customer_id = customer_id || debt.customer_id;
-        debt.dept_cus_amount = dept_cus_amount || debt.dept_cus_amount;
+        debt.supplier_id = supplier_id || debt.supplier_id;
+        debt.dept_sup_amount = dept_sup_amount || debt.dept_sup_amount;
 
         await debt.save();
         res.status(200).json(debt);
@@ -91,7 +90,7 @@ const deleteDebt = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const debt = await DebtCus.findByPk(id);
+        const debt = await DebtSup.findByPk(id);
 
         if (!debt) {
             return res.status(404).json({ message: 'Debt record not found.' });
@@ -107,7 +106,7 @@ const deleteDebt = async (req, res) => {
 module.exports = {
     createDebt,
     getAllDebts,
+    getDebtBySup,
     updateDebt,
     deleteDebt,
-    getDebtByCus,
 };

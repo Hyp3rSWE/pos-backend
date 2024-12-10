@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const InvoiceCusController = require("../controllers/InvoiceController");
+const InvoiceSupController = require("../controllers/InvoiceSupController");
 
 /**
  * @swagger
@@ -164,10 +164,10 @@ const InvoiceCusController = require("../controllers/InvoiceController");
  *           description: Server error
  */
 
-router.get("/", InvoiceCusController.getAllInvoices);
-router.get("/:invoice_id", InvoiceCusController.getInvoiceById);
-router.post("/", InvoiceCusController.createInvoice);
-router.put("/:invoice_id", InvoiceCusController.updateInvoice);
-router.delete("/:invoice_id", InvoiceCusController.deleteInvoice);
+router.get("/", InvoiceSupController.getAllInvoices);
+router.get("/:invoice_id", InvoiceSupController.getInvoiceById);
+router.post("/", InvoiceSupController.createInvoice);
+router.put("/:invoice_id", InvoiceSupController.updateInvoice);
+router.delete("/:invoice_id", InvoiceSupController.deleteInvoice);
 
 module.exports = router;

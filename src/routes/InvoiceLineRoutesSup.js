@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const InvoiceLineController = require("../controllers/InvoiceLineController");
+const InvoiceLineSupController = require("../controllers/InvoiceLineSupController");
 
 /**
  * @swagger
@@ -135,15 +135,15 @@ const InvoiceLineController = require("../controllers/InvoiceLineController");
  *           description: Internal server error
  */
 
-router.get("/", InvoiceLineController.getAllInvoiceLines);
+router.get("/",     InvoiceLineSupController.getAllInvoiceLines);
 router.get(
-    "/:invoice_cus_id/:product_id/:product_variant_id",
-    InvoiceLineController.getInvoiceLineById
+    "/:invoice_sup_id/:product_id/:product_variant_id",
+    InvoiceLineSupController.getInvoiceLineById
 );
-router.post("/", InvoiceLineController.createInvoiceLine);
+router.post("/",     InvoiceLineSupController.createInvoiceLine);
 router.delete(
-    "/:invoice_cus_id/:product_id/:product_variant_id",
-    InvoiceLineController.deleteInvoiceLine
+    "/:invoice_sup_id/:product_id/:product_variant_id",
+    InvoiceLineSupController.deleteInvoiceLine
 );
 
 module.exports = router;

@@ -16,7 +16,7 @@ const InvoiceLineSup = sequelize.define('InvoiceLine_sup', {
     invoice_sup_id: {
         type: DataTypes.INTEGER,
         references: {
-            model: Invoice,
+            model: InvoiceSup,
             key: 'invoice_sup_id',
         },
         primaryKey: true,
@@ -49,4 +49,4 @@ InvoiceLineSup.belongsTo(Product, { foreignKey: 'product_id' });
 InvoiceLineSup.belongsTo(ProductVariant, { foreignKey: 'product_variant_id' });
 InvoiceLineSup.belongsTo(InvoiceSup, { foreignKey: 'invoice_sup_id' });
 
-module.exports = InvoiceLineCus;
+module.exports = InvoiceLineSup;

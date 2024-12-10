@@ -1,8 +1,9 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
-const User = require("./User");
+
 const Customer = require("./Customer");
 const Supplier = require("./Supplier");
+
 
 const InvoiceSup = sequelize.define(
     "Invoice_sup",
@@ -37,7 +38,6 @@ const InvoiceSup = sequelize.define(
 );
 
 // Define associations
-Invoice.belongsTo(User, { foreignKey: "user_id" });
-Invoice.belongsTo(Supplier, { foreignKey: "supplier_id" });
+InvoiceSup.belongsTo(Supplier, { foreignKey: "supplier_id" });
 
 module.exports = InvoiceSup;

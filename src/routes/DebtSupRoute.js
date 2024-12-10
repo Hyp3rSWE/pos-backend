@@ -1,18 +1,19 @@
 const express = require('express');
 const {
     getAllDebts,
-    getDebtById,
+    getDebtBySup,
     createDebt,
     updateDebt,
     deleteDebt,
-} = require('../controllers/DebtsController'); 
+} = require('../controllers/DebtsSuppController'); 
+
 
 const router = express.Router();
 
 router.get('/', getAllDebts);
-router.get('/:id', getDebtById);
+router.get('/:id', getDebtBySup);
 router.post('/', createDebt);
-router.put('/:id', updateDebt);
+router.put('/:id/:time', updateDebt);
 router.delete('/:id', deleteDebt);
 
 module.exports = router;

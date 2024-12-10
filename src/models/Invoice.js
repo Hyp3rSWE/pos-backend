@@ -36,7 +36,7 @@ const InvoiceCus = sequelize.define(
 );
 
 // Define associations
-Invoice.belongsTo(User, { foreignKey: "user_id" });
-Invoice.belongsTo(Customer, { foreignKey: "customer_id" });
+
+InvoiceCus.belongsTo(Customer, { foreignKey: "customer_id" });
 
 module.exports = InvoiceCus;

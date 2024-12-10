@@ -16,7 +16,7 @@ const InvoiceLineCus = sequelize.define('InvoiceLine_cus', {
     invoice_cus_id: {
         type: DataTypes.INTEGER,
         references: {
-            model: Invoice,
+            model: InvoiceCus,
             key: 'invoice_cus_id',
         },
         primaryKey: true,

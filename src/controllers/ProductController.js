@@ -2,7 +2,6 @@ const Product = require('../models/Product');
 const Supplier = require('../models/Supplier');
 
 
-
 // Create a new product
 exports.createProduct = async (req, res) => {
     try {

@@ -1,0 +1,40 @@
+# Test Get All Invoice Supplies
+GET http://localhost:3000/api/invoiceSupp
+Accept: application/json
+
+###
+
+# Test Get Invoice Supply by ID
+GET http://localhost:3000/api/invoiceSupp/1
+Accept: application/json
+
+###
+
+# Test Create Invoice Supply
+POST http://localhost:3000/api/invoiceSupp
+Content-Type: application/json
+
+{
+  "supplier_id": 1,
+  "product_id": 2,
+  "quantity": 10,
+  "unitPrice": 100.50
+}
+
+###
+
+# Test Update Invoice Supply by ID
+PUT http://localhost:3000/api/invoiceSupp/1
+Content-Type: application/json
+
+{
+  "supplier_id": 1,
+  "product_id": 3,
+  "quantity": 15,
+  "unitPrice": 120.75
+}
+
+###
+
+# Test Delete Invoice Supply by ID
+DELETE http://localhost:3000/api/invoiceSupp/1

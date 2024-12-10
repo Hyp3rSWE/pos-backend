@@ -12,6 +12,8 @@ const productVariantRoutes = require("./routes/ProductVariantRoutes");
 const invoiceRoutes = require("./routes/InvoiceRoutes");
 const invoiceLineRoutes = require("./routes/InvoiceLineRoutes");
 
+const invoiceSuppRoutes = require("./routes/invoiceSppRoute");
+const debtsRoutes = require("./routes/DebtsRoute.js");
 const app = express();
 
 // Middleware
@@ -93,5 +95,7 @@ app.use("/products", productRoutes);
 app.use("/product-variants", productVariantRoutes);
 app.use("/invoices", invoiceRoutes);
 app.use("/invoice-lines", invoiceLineRoutes);
+app.use('/api/invoicesSupp', invoiceSuppRoutes);
+app.use('/api/debts', debtsRoutes);
 
 module.exports = app;

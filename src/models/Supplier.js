@@ -14,6 +14,9 @@ const Supplier = sequelize.define('Supplier', {
     supplier_phone: {
         type: DataTypes.STRING(50),
     },
+    supplier_debt :{
+        type: DataTypes.DOUBLE,
+    }
 }, {
     tableName: 'supplier',
     timestamps: false,

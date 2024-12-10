@@ -2,28 +2,29 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 const User = require("./User");
 const Customer = require("./Customer");
+const Supplier = require("./Supplier");
 
-const InvoiceCus = sequelize.define(
-    "Invoice_cus",
+const InvoiceSup = sequelize.define(
+    "Invoice_sup",
     {
-        invoice_id: {
+        invoice_sup_id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
         },
 
-        customer_id: {
+        supplier_id: {
             type: DataTypes.INTEGER,
             references: {
                 model: Customer,
                 key: "customer_id",
             },
         },
-        invoice_cus_timestamp: {
+        invoice_sup_timestamp: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,
         },
-        invoice_cus_total_amount: {
+        invoice_sup_total_amount: {
             type: DataTypes.DOUBLE,
             allowNull: false,
         },
@@ -37,6 +38,6 @@ const InvoiceCus = sequelize.define(
 
 // Define associations
 Invoice.belongsTo(User, { foreignKey: "user_id" });
-Invoice.belongsTo(Customer, { foreignKey: "customer_id" });
+Invoice.belongsTo(Supplier, { foreignKey: "supplier_id" });
 
-module.exports = InvoiceCus;
+module.exports = InvoiceSup;

@@ -1,10 +1,10 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
-const InvoiceCus = require('./Invoice');
+const InvoiceSup = require('./Invoice');
 const Product = require('./Product');
 const ProductVariant = require('./ProductVariant');
 
-const InvoiceLineCus = sequelize.define('InvoiceLine_cus', {
+const InvoiceLineSup = sequelize.define('InvoiceLine_sup', {
     product_id: {
         type: DataTypes.INTEGER,
         references: {
@@ -13,11 +13,11 @@ const InvoiceLineCus = sequelize.define('InvoiceLine_cus', {
         },
         primaryKey: true,
     },
-    invoice_cus_id: {
+    invoice_sup_id: {
         type: DataTypes.INTEGER,
         references: {
             model: Invoice,
-            key: 'invoice_cus_id',
+            key: 'invoice_sup_id',
         },
         primaryKey: true,
     },
@@ -29,24 +29,24 @@ const InvoiceLineCus = sequelize.define('InvoiceLine_cus', {
         },
         primaryKey: true,
     },
-    invoice_cus_line_quantity: {
+    invoice_sup_line_quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    invoice_cus_line_price: {
+    invoice_sup_line_price: {
         type: DataTypes.DOUBLE,
         allowNull: false,
     },
 },
     {
-        tableName: 'invoice_cus_line',
+        tableName: 'invoice_sup_line',
         timestamps: false,
     }
 );
 
 // Define associations
-InvoiceLineCus.belongsTo(Product, { foreignKey: 'product_id' });
-InvoiceLineCus.belongsTo(ProductVariant, { foreignKey: 'product_variant_id' });
-InvoiceLineCus.belongsTo(InvoiceCus, { foreignKey: 'invoice_cus_id' });
+InvoiceLineSup.belongsTo(Product, { foreignKey: 'product_id' });
+InvoiceLineSup.belongsTo(ProductVariant, { foreignKey: 'product_variant_id' });
+InvoiceLineSup.belongsTo(InvoiceSup, { foreignKey: 'invoice_sup_id' });
 
 module.exports = InvoiceLineCus;

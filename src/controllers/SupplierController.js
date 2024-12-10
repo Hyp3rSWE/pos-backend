@@ -45,11 +45,12 @@ class SupplierController {
 
     // Create a new supplier
     static async createSupplier(req, res) {
-        const { supplier_name, supplier_phone } = req.body;
+        const { supplier_name, supplier_phone , total_Debt } = req.body;
         try {
             const newSupplier = await Supplier.create({
                 supplier_name,
                 supplier_phone,
+                total_Debt,
             });
             res.status(201).json(newSupplier);
         } catch (error) {
@@ -60,13 +61,13 @@ class SupplierController {
     // Update a supplier
     static async updateSupplier(req, res) {
         const { id } = req.params;
-        const { supplier_name, supplier_phone } = req.body;
+        const { supplier_name, supplier_phone , total_Debt } = req.body;
         try {
             const supplier = await Supplier.findByPk(id);
             if (!supplier) {
                 return res.status(404).json({ message: "Supplier not found" });
             }
-            await supplier.update({ supplier_name, supplier_phone });
+            await supplier.update({ supplier_name, supplier_phone  , total_Debt});
             res.status(200).json(supplier);
         } catch (error) {
             res.status(500).json({ error: error.message });

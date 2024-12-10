@@ -27,7 +27,7 @@ const router = express.Router();
  *       201:
  *         description: Product variant created successfully
  */
-router.post("/product-variants", ProductVariantController.createProductVariant);
+router.post("/", ProductVariantController.createProductVariant);
 
 /**
  * @swagger
@@ -39,7 +39,7 @@ router.post("/product-variants", ProductVariantController.createProductVariant);
  *       200:
  *         description: List of product variants
  */
-router.get("/product-variants", ProductVariantController.getAllProductVariants);
+router.get("/", ProductVariantController.getAllProductVariants);
 
 /**
  * @swagger
@@ -61,7 +61,7 @@ router.get("/product-variants", ProductVariantController.getAllProductVariants);
  *         description: Product variant not found
  */
 router.get(
-    "/product-variants/:id",
+    "/:id",
     ProductVariantController.getProductVariantById
 );
 
@@ -91,7 +91,7 @@ router.get(
  *         description: Product variant not found
  */
 router.put(
-    "/product-variants/:id",
+    "/:id",
     ProductVariantController.updateProductVariant
 );
 
@@ -115,7 +115,7 @@ router.put(
  *         description: Product variant not found
  */
 router.delete(
-    "/product-variants/:id",
+    "/:id",
     ProductVariantController.deleteProductVariant
 );
 

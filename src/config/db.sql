@@ -1,10 +1,3 @@
-CREATE TABLE "customer" (
-    "customer_id" SERIAL PRIMARY KEY,
-    "customer_name" VARCHAR(255),
-    "customer_phone" VARCHAR(50),
-    "customer_debt" DOUBLE PRECISION
-);
-
 CREATE TABLE "user" (
     "user_id" SERIAL PRIMARY KEY,
     "user_role" VARCHAR(50),
@@ -12,10 +5,18 @@ CREATE TABLE "user" (
     "user_pass" VARCHAR(255)
 );
 
+CREATE TABLE "customer" (
+    "customer_id" SERIAL PRIMARY KEY,
+    "customer_name" VARCHAR(255),
+    "customer_phone" VARCHAR(50),
+    "customer_debt" DOUBLE PRECISION
+);
+
 CREATE TABLE "supplier" (
     "supplier_id" SERIAL PRIMARY KEY,
     "supplier_name" VARCHAR(255),
-    "supplier_phone" VARCHAR(50)
+    "supplier_phone" VARCHAR(50),
+    "supplier_debt" DOUBLE PRECISION
 );
 
 CREATE TABLE "product" (
@@ -38,25 +39,58 @@ CREATE TABLE "product_variant" (
     CONSTRAINT FK_PRODUCT FOREIGN KEY ("product_id") REFERENCES "product" ("product_id")
 );
 
-CREATE TABLE "invoice" (
-    "invoice_id" SERIAL PRIMARY KEY,
-    "user_id" INT,
+CREATE TABLE "invoice_cus" (
+    "invoice_cus_id" SERIAL PRIMARY KEY,
     "customer_id" INT,
-    "invoice_timestamp" TIMESTAMP,
-    "invoice_total_amount" DOUBLE PRECISION,
-    "invoice_paid_amount" DOUBLE PRECISION,
-    CONSTRAINT FK_USER FOREIGN KEY ("user_id") REFERENCES "user" ("user_id"),
+    "invoice_cus_timestamp" TIMESTAMP,
+    "invoice_cus_total_amount" DOUBLE PRECISION,
     CONSTRAINT FK_CUSTOMER FOREIGN KEY ("customer_id") REFERENCES "customer" ("customer_id")
 );
 
-CREATE TABLE "invoice_line" (
+CREATE TABLE "invoice_line_cus" (
     "product_id" INT,
-    "invoice_id" INT,
+    "invoice_cus_id" INT,
     "product_variant_id" INT,
-    "invoice_line_quantity" INT,
-    "invoice_line_price" DOUBLE PRECISION,
-    PRIMARY KEY ("product_id", "invoice_id", "product_variant_id"),
-    CONSTRAINT FK_INVOICE FOREIGN KEY ("invoice_id") REFERENCES "invoice" ("invoice_id"),
+    "invoice_cus_line_quantity" INT,
+    "invoice_cus_line_price" DOUBLE PRECISION,
+    PRIMARY KEY ("product_id", "invoice_cus_id", "product_variant_id"),
+    CONSTRAINT FK_INVOICE_CUS FOREIGN KEY ("invoice_cus_id") REFERENCES "invoice_cus" ("invoice_cus_id"),
+    CONSTRAINT FK_PRODUCT_LINE FOREIGN KEY ("product_id") REFERENCES "product" ("product_id"),
+    CONSTRAINT FK_VARIANT_LINE FOREIGN KEY ("product_variant_id") REFERENCES "product_variant" ("variant_id")
+);
+
+CREATE TABLE "debt_cus" (
+    "customer_id" INT,
+    "debt_cus_timestamp" TIMESTAMP,
+    "debt_cus_amount" DOUBLE PRECISION,
+    PRIMARY KEY ("customer_id", "debt_cus_timestamp"),
+    CONSTRAINT FK_CUSTOMER FOREIGN KEY ("customer_id") REFERENCES "customer" ("customer_id")
+);
+
+CREATE TABLE "debt_sup" (
+    "supplier_id" INT,
+    "debt_sup_timestamp" TIMESTAMP,
+    "debt_sup_amount" DOUBLE PRECISION,
+    PRIMARY KEY ("supplier_id", "debt_sup_timestamp"),
+    CONSTRAINT FK_SUPPLIER FOREIGN KEY ("supplier_id") REFERENCES "supplier" ("supplier_id")
+);
+
+CREATE TABLE "invoice_sup" (
+    "invoice_sup_id" SERIAL PRIMARY KEY,
+    "supplier_id" INT,
+    "invoice_sup_timestamp" TIMESTAMP,
+    "invoice_sup_total_amount" DOUBLE PRECISION,
+    CONSTRAINT FK_SUPPLIER FOREIGN KEY ("supplier_id") REFERENCES "supplier" ("supplier_id")
+);
+
+CREATE TABLE "invoice_line_sup" (
+    "product_id" INT,
+    "invoice_sup_id" INT,
+    "product_variant_id" INT,
+    "invoice_sup_line_quantity" INT,
+    "invoice_sup_line_price" DOUBLE PRECISION,
+    PRIMARY KEY ("product_id", "invoice_sup_id", "product_variant_id"),
+    CONSTRAINT FK_INVOICE_SUP FOREIGN KEY ("invoice_sup_id") REFERENCES "invoice_sup" ("invoice_sup_id"),
     CONSTRAINT FK_PRODUCT_LINE FOREIGN KEY ("product_id") REFERENCES "product" ("product_id"),
     CONSTRAINT FK_VARIANT_LINE FOREIGN KEY ("product_variant_id") REFERENCES "product_variant" ("variant_id")
 );

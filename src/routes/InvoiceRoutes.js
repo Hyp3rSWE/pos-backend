@@ -30,9 +30,6 @@ const InvoiceCusController = require("../controllers/InvoiceController");
  *                 invoice_total_amount:
  *                   type: number
  *                   format: double
- *                 invoice_paid_amount:
- *                   type: number
- *                   format: double
  *                 invoice_lines:
  *                   type: array
  *                   items:
@@ -59,7 +56,6 @@ const InvoiceCusController = require("../controllers/InvoiceController");
  *             user_id: 1
  *             customer_id: 1
  *             invoice_total_amount: 300.00
- *             invoice_paid_amount: 150.00
  *         500:
  *           description: Server error
  *     get:
@@ -79,12 +75,10 @@ const InvoiceCusController = require("../controllers/InvoiceController");
  *               user_id: 1
  *               customer_id: 1
  *               invoice_total_amount: 300.00
- *               invoice_paid_amount: 150.00
  *             - invoice_id: 2
  *               user_id: 2
  *               customer_id: 2
  *               invoice_total_amount: 500.00
- *               invoice_paid_amount: 200.00
  *         500:
  *           description: Server error
  *   /invoices/{invoice_id}:
@@ -110,7 +104,6 @@ const InvoiceCusController = require("../controllers/InvoiceController");
  *             user_id: 1
  *             customer_id: 1
  *             invoice_total_amount: 300.00
- *             invoice_paid_amount: 150.00
  *         404:
  *           description: Invoice not found
  *         500:
@@ -133,9 +126,6 @@ const InvoiceCusController = require("../controllers/InvoiceController");
  *               type: object
  *               properties:
  *                 invoice_total_amount:
- *                   type: number
- *                   format: double
- *                 invoice_paid_amount:
  *                   type: number
  *                   format: double
  *       responses:

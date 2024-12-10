@@ -15,7 +15,7 @@ POST http://localhost:3000/product-variants
 Content-Type: application/json
 
 {
-    "product_id": 1,  # Ensure this product_id exists
+    "product_id": 1,  
     "variant_barcode": "9876543210",
     "variant_price": 150.00,
     "variant_quantity": 100,

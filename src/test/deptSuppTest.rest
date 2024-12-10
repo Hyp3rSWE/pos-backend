@@ -1,0 +1,37 @@
+# Create a new debt record
+POST http://localhost:3000/debts
+Content-Type: application/json
+
+{
+    "customer_id": 1,
+    "debt_cus_amount": 100.50
+}
+
+###
+
+# Get all debt records
+GET http://localhost:3000/debts
+Content-Type: application/json
+
+###
+
+# Get a single debt record by ID
+GET http://localhost:3000/debts/1
+Content-Type: application/json
+
+###
+
+# Update a debt record
+PUT http://localhost:3000/debts/1
+Content-Type: application/json
+
+{
+    "customer_id": 1,
+    "debt_cus_amount": 200.75
+}
+
+###
+
+# Delete a debt record
+DELETE http://localhost:3000/debts/1
+Content-Type: application/json

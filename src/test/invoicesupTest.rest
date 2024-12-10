@@ -1,0 +1,36 @@
+# Get all invoices
+GET http://localhost:3000/invoice-sup
+Content-Type: application/json
+
+###
+
+# Get a single invoice by ID
+GET http://localhost:3000/invoice-sup/1
+Content-Type: application/json
+
+###
+
+# Create a new invoice with a supplier
+POST http://localhost:3000/invoice-sup
+Content-Type: application/json
+
+{
+    "supplier_id": 1,  # Make sure this supplier_id exists in the Supplier table
+    "invoice_sup_total_amount": 1500.00
+}
+
+###
+
+# Update an existing invoice
+PUT http://localhost:3000/invoice-sup/1
+Content-Type: application/json
+
+{
+    "invoice_sup_total_amount": 1600.00
+}
+
+###
+
+# Delete an invoice
+DELETE http://localhost:3000/invoice-sup/1
+Content-Type: application/json

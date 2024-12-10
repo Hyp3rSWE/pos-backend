@@ -1,0 +1,40 @@
+# Get all products
+GET http://localhost:3000/products
+Content-Type: application/json
+
+###
+
+# Get a single product by ID
+GET http://localhost:3000/products/1
+Content-Type: application/json
+
+###
+
+# Create a new product with a supplier
+POST http://localhost:3000/products
+Content-Type: application/json
+
+{
+    "supplier_id": 1,  # Ensure this supplier_id exists in the Supplier table
+    "product_barcode": "1234567890123",
+    "product_price": 100.00,
+    "product_name": "Product Example",
+    "product_stock_level": 50
+}
+
+###
+
+# Update an existing product
+PUT http://localhost:3000/products/1
+Content-Type: application/json
+
+{
+    "product_price": 120.00,
+    "product_stock_level": 60
+}
+
+###
+
+# Delete a product
+DELETE http://localhost:3000/products/1
+Content-Type: application/json

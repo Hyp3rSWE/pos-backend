@@ -94,20 +94,18 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use("/users", userRoutes);
-app.use("/suppliers", supplierRoutes);
-app.use("/customers", customerRoutes);
+
 app.use("/products", productRoutes);
 app.use("/product-variants", productVariantRoutes);
+
+app.use("/customers", customerRoutes);
 app.use("/invoices", invoiceRoutes);
-
 app.use("/invoice-lines", invoiceLineRoutes);
-
-app.use("/invoices-sup", invoiceSupRoutes);
-
-app.use("/invoice-sup-lines", invoiceLineSupRoutes);
-
-
 app.use('/debt-cus', debtCusRoutes);
+
+app.use("/suppliers", supplierRoutes);
+app.use("/invoices-sup", invoiceSupRoutes);
+app.use("/invoice-sup-lines", invoiceLineSupRoutes);
 app.use('/debt-sup', debtSupRoutes);
 
 module.exports = app;

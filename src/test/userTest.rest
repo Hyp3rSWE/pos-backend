@@ -2,25 +2,18 @@
 GET http://localhost:3000/users
 Content-Type: application/json
 
-###
-
 # Get a user by ID
 GET http://localhost:3000/users/1
 Content-Type: application/json
 
-###
-
 # Create a new user
 POST http://localhost:3000/users
 Content-Type: application/json
-
 {
     "user_role": "admin",
     "user_name": "john_doe",
     "user_pass": "securepassword123"
 }
-
-###
 
 # Update an existing user
 PUT http://localhost:3000/users/1
@@ -31,8 +24,6 @@ Content-Type: application/json
     "user_name": "john_doe_updated",
     "user_pass": "newsecurepassword456"
 }
-
-###
 
 # Delete a user
 DELETE http://localhost:3000/users/1

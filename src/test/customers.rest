@@ -1,0 +1,36 @@
+# Create a new customer
+POST http://localhost:3000/customers
+Content-Type: application/json
+
+{
+    "customer_name": "John Doe",
+    "customer_phone": "1234567890",
+    "customer_debt": 500.00
+}
+
+###
+
+# Get all customers
+GET http://localhost:3000/customers
+
+###
+
+# Get a customer by ID
+GET http://localhost:3000/customers/1
+
+###
+
+# Update a customer
+PUT http://localhost:3000/customers/1
+Content-Type: application/json
+
+{
+    "customer_name": "Jane Doe",
+    "customer_phone": "0987654321",
+    "customer_debt": 300.00
+}
+
+###
+
+# Delete a customer
+DELETE http://localhost:3000/customers/9

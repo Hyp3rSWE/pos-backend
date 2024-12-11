@@ -19,8 +19,8 @@ Content-Type: application/json
 
 {
     "invoice_cus_id": 1,
-    "product_id": 1,
-    "product_variant_id": 3,
+    "product_id": 3,
+    "product_variant_id": null,
     "invoice_cus_line_quantity": 4,
     "invoice_cus_line_price": 50.00
 }

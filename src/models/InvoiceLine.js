@@ -29,7 +29,7 @@ const InvoiceLineCus = sequelize.define(
                 model: ProductVariant,
                 key: "variant_id",
             },
-            primaryKey: true,
+            allowNull: true,
         },
         invoice_cus_line_quantity: {
             type: DataTypes.INTEGER,

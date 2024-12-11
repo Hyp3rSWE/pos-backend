@@ -51,7 +51,6 @@ class InvoiceLineController {
             if (
                 !invoice_cus_id ||
                 !product_id ||
-                !product_variant_id ||
                 !invoice_cus_line_quantity ||
                 !invoice_cus_line_price
             ) {
@@ -60,13 +59,15 @@ class InvoiceLineController {
                     .json({ message: "Missing required fields" });
             }
 
+            // Create the invoice line, handling possible null for product_variant_id
             const newInvoiceLine = await InvoiceLineCus.create({
                 invoice_cus_id: invoice_cus_id,
                 product_id: product_id,
-                product_variant_id: product_variant_id,
+                product_variant_id: product_variant_id || null, // Default to null if not provided
                 invoice_cus_line_quantity: invoice_cus_line_quantity,
                 invoice_cus_line_price: invoice_cus_line_price,
             });
+
             res.status(201).json(newInvoiceLine);
         } catch (error) {
             console.error("Error creating invoice line:", error);

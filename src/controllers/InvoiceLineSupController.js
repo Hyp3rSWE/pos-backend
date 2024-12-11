@@ -51,7 +51,6 @@ class InvoiceLineSupController {
             if (
                 !invoice_sup_id ||
                 !product_id ||
-                !product_variant_id ||
                 !invoice_sup_line_quantity ||
                 !invoice_sup_line_price
             ) {
@@ -63,7 +62,7 @@ class InvoiceLineSupController {
             const newInvoiceLine = await InvoiceLineSup.create({
                 invoice_sup_id: invoice_sup_id,
                 product_id: product_id,
-                product_variant_id: product_variant_id,
+                product_variant_id: product_variant_id || null,
                 invoice_sup_line_quantity: invoice_sup_line_quantity,
                 invoice_sup_line_price: invoice_sup_line_price,
             });

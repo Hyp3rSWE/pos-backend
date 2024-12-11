@@ -53,7 +53,7 @@ CREATE TABLE "invoice_line_cus" (
     "product_variant_id" INT,
     "invoice_cus_line_quantity" INT,
     "invoice_cus_line_price" DOUBLE PRECISION,
-    PRIMARY KEY ("product_id", "invoice_cus_id", "product_variant_id"),
+    PRIMARY KEY ("product_id", "invoice_cus_id"),
     CONSTRAINT FK_INVOICE_CUS FOREIGN KEY ("invoice_cus_id") REFERENCES "invoice_cus" ("invoice_cus_id"),
     CONSTRAINT FK_PRODUCT_LINE FOREIGN KEY ("product_id") REFERENCES "product" ("product_id"),
     CONSTRAINT FK_VARIANT_LINE FOREIGN KEY ("product_variant_id") REFERENCES "product_variant" ("variant_id")
@@ -89,7 +89,7 @@ CREATE TABLE "invoice_line_sup" (
     "product_variant_id" INT,
     "invoice_sup_line_quantity" INT,
     "invoice_sup_line_price" DOUBLE PRECISION,
-    PRIMARY KEY ("product_id", "invoice_sup_id", "product_variant_id"),
+    PRIMARY KEY ("product_id", "invoice_sup_id"),
     CONSTRAINT FK_INVOICE_SUP FOREIGN KEY ("invoice_sup_id") REFERENCES "invoice_sup" ("invoice_sup_id"),
     CONSTRAINT FK_PRODUCT_LINE FOREIGN KEY ("product_id") REFERENCES "product" ("product_id"),
     CONSTRAINT FK_VARIANT_LINE FOREIGN KEY ("product_variant_id") REFERENCES "product_variant" ("variant_id")

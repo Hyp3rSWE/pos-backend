@@ -1,0 +1,51 @@
+### Get all invoices
+GET http://localhost:3000/invoices-sup
+Content-Type: application/json
+
+###
+
+### Get an invoice by ID
+GET http://localhost:3000/invoices-sup/1
+Content-Type: application/json
+
+###
+
+### Create a new invoice
+POST http://localhost:3000/invoices-sup
+Content-Type: application/json
+
+{
+  "invoice_sup_total_amount": 500,
+  "supplier_id": 1,
+  "invoice_lines": [
+    {
+      "product_id": 1,
+      "product_variant_id": 2,
+      "invoice_sup_line_quantity": 3,
+      "invoice_sup_line_price": 100
+    },
+    {
+      "product_id": 2,
+      "product_variant_id": 3,
+      "invoice_sup_line_quantity": 1,
+      "invoice_sup_line_price": 200
+    }
+  ]
+}
+
+###
+
+### Update an existing invoice
+PUT http://localhost:3000/invoices-sup/1
+Content-Type: application/json
+
+{
+  "invoice_sup_total_amount": 600,
+  "supplier_id": 2
+}
+
+###
+
+### Delete an invoice
+DELETE http://localhost:3000/invoices-sup/6
+Content-Type: application/json

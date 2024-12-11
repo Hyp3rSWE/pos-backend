@@ -1,0 +1,31 @@
+# Get all invoice lines
+GET http://localhost:3000/invoice-sup-lines
+
+###
+
+# Get a single invoice line by composite key
+GET http://localhost:3000/invoice-sup-lines/1/1/1
+
+###
+
+# Get all invoice lines by invoice_cus_id
+GET http://localhost:3000/invoice-sup-lines/1
+
+###
+
+# Create a new invoice line
+POST http://localhost:3000/invoice-sup-lines
+Content-Type: application/json
+
+{
+    "invoice_sup_id": 1,
+    "product_id": 1,
+    "product_variant_id": 3,
+    "invoice_sup_line_quantity": 4,
+    "invoice_sup_line_price": 50.00
+}
+
+###
+
+# Delete an invoice line by composite key
+DELETE http://localhost:3000/invoice-sup-lines/1/1/3

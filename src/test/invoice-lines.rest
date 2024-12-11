@@ -8,6 +8,11 @@ GET http://localhost:3000/invoice-lines/1/1/1
 
 ###
 
+# Get all invoice lines by invoice_cus_id
+GET http://localhost:3000/invoice-lines/1
+
+###
+
 # Create a new invoice line
 POST http://localhost:3000/invoice-lines
 Content-Type: application/json

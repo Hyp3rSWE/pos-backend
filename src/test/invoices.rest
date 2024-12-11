@@ -1,51 +1,51 @@
-# Get all invoices
+### Get all invoices
 GET http://localhost:3000/invoices
 Content-Type: application/json
 
 ###
 
-# Get a single invoice by ID
-GET http://localhost:3000/invoices/1
+### Get an invoice by ID
+GET http://localhost:3000/invoices/5
 Content-Type: application/json
 
 ###
 
-# Create a new invoice with invoice lines
+### Create a new invoice
 POST http://localhost:3000/invoices
 Content-Type: application/json
 
 {
-    "invoice_total_amount": 1500.00,
-    "customer_id": 1,
-    "invoice_lines": [
-        {
-            "product_id": 1,
-            "product_variant_id": 1,
-            "invoice_line_quantity": 3,
-            "invoice_line_price": 500.00
-        },
-        {
-            "product_id": 2,
-            "product_variant_id": 2,
-            "invoice_line_quantity": 1,
-            "invoice_line_price": 500.00
-        }
-    ]
+  "invoice_cus_total_amount": 500,
+  "customer_id": 1,
+  "invoice_lines": [
+    {
+      "product_id": 1,
+      "product_variant_id": 2,
+      "invoice_cus_line_quantity": 3,
+      "invoice_cus_line_price": 100
+    },
+    {
+      "product_id": 2,
+      "product_variant_id": 3,
+      "invoice_cus_line_quantity": 1,
+      "invoice_cus_line_price": 200
+    }
+  ]
 }
 
 ###
 
-# Update an existing invoice
+### Update an existing invoice
 PUT http://localhost:3000/invoices/1
 Content-Type: application/json
 
 {
-    "invoice_total_amount": 1600.00,
-    "customer_id": 2
+  "invoice_cus_total_amount": 600,
+  "customer_id": 2
 }
 
 ###
 
-# Delete an invoice
-DELETE http://localhost:3000/invoices/1
+### Delete an invoice
+DELETE http://localhost:3000/invoices/6
 Content-Type: application/json

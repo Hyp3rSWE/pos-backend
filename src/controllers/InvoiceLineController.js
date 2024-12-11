@@ -135,6 +135,25 @@ class InvoiceLineController {
             res.status(500).json({ message: "Internal server error" });
         }
     }
+
+    // Get all invoice lines by invoice_cus_id
+    static async getAllInvoiceLinesByInvoiceID(req, res) {
+        try {
+            const { invoice_cus_id } = req.params;
+            const invoiceLines = await InvoiceLineCus.findAll({
+                where: {
+                    invoice_cus_id: invoice_cus_id,
+                },
+            });
+            res.status(200).json(invoiceLines);
+        } catch (error) {
+            console.error(
+                "Error fetching invoice lines by invoice_cus_id:",
+                error
+            );
+            res.status(500).json({ message: "Internal server error" });
+        }
+    }
 }
 
 module.exports = InvoiceLineController;

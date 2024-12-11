@@ -1,6 +1,5 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
-const User = require("./User");
 const Customer = require("./Customer");
 
 const InvoiceCus = sequelize.define(
@@ -27,7 +26,6 @@ const InvoiceCus = sequelize.define(
             type: DataTypes.DOUBLE,
             allowNull: false,
         },
-       
     },
     {
         tableName: "invoice_cus",
@@ -38,5 +36,9 @@ const InvoiceCus = sequelize.define(
 // Define associations
 
 InvoiceCus.belongsTo(Customer, { foreignKey: "customer_id" });
+InvoiceCus.hasMany(InvoiceCus, {
+    as: "invoice_cus",
+    foreignKey: "invoice_cus_id",
+});
 
 module.exports = InvoiceCus;

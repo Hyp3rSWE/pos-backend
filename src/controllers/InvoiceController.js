@@ -1,54 +1,74 @@
 const { sequelize } = require("../config/db");
-const Invoice = require("../models/Invoice");
-const InvoiceLine = require("../models/InvoiceLine");
+const InvoiceCus = require("../models/Invoice");
+const InvoiceLineCus = require("../models/InvoiceLine");
 
 class InvoiceCusController {
     // Get all invoices
     static async getAllInvoices(req, res) {
         try {
-            const invoices = await Invoice.findAll({
-                include: [{
-                    model: InvoiceLine,
-                    as: 'invoiceLines',
-                    where: { invoice_id: sequelize.col('Invoice.id') },
-                    required: false // Use false to include invoices even if they have no lines
-                }]
-            });
-            res.json(invoices);
+            const invoices = await InvoiceCus.findAll();
+
+            const invoicesWithLines = await Promise.all(
+                invoices.map(async (invoice) => {
+                    const invoiceLines = await InvoiceLineCus.findAll({
+                        where: { invoice_cus_id: invoice.invoice_cus_id },
+                    });
+                    return {
+                        ...invoice.get(),
+                        invoiceLines,
+                    };
+                })
+            );
+
+            res.json(invoicesWithLines);
         } catch (error) {
             res.status(500).json({ message: "Error fetching invoices", error });
         }
     }
 
     // Get a single invoice by ID
+    // Get a single invoice by ID without using `include` for lines
     static async getInvoiceById(req, res) {
         try {
-            const invoice = await Invoice.findByPk(req.params.invoice_id);
+            const invoice = await InvoiceCus.findByPk(
+                req.params.invoice_cus_id
+            );
+
             if (!invoice) {
                 return res.status(404).json({ message: "Invoice not found" });
             }
-            res.json(invoice);
+
+            // Fetch the invoice lines
+            const invoiceLines = await InvoiceLineCus.findAll({
+                where: { invoice_cus_id: invoice.invoice_cus_id },
+            });
+
+            // Return the invoice with its lines
+            res.json({
+                ...invoice.get(),
+                invoiceLines,
+            });
         } catch (error) {
-            res.status(500).json({ message: "Error fetching invoice", error });
+            res.status(500).json({
+                message: "Error fetching invoice and its lines",
+                error: error.message,
+            });
         }
     }
 
     // Create a new invoice
     static async createInvoice(req, res) {
-        const {
-            invoice_total_amount,
-            customer_id,
-            invoice_lines,
-        } = req.body;
+        const { invoice_cus_total_amount, customer_id, invoice_lines } =
+            req.body;
 
         // Start a transaction to ensure both operations (invoice and invoice lines) are handled together
         const t = await sequelize.transaction();
 
         try {
             // Step 1: Create the invoice
-            const newInvoice = await Invoice.create(
+            const newInvoice = await InvoiceCus.create(
                 {
-                    invoice_total_amount,
+                    invoice_cus_total_amount,
                     customer_id,
                 },
                 { transaction: t }
@@ -56,13 +76,14 @@ class InvoiceCusController {
 
             // Step 2: Create the associated invoice lines
             const invoiceLinePromises = invoice_lines.map((line) => {
-                return InvoiceLine.create(
+                return InvoiceLineCus.create(
                     {
-                        invoice_id: newInvoice.invoice_id, // Use the generated invoice_id
+                        invoice_cus_id: newInvoice.invoice_cus_id, // Use the generated invoice_id
                         product_id: line.product_id,
                         product_variant_id: line.product_variant_id,
-                        invoice_line_quantity: line.invoice_line_quantity,
-                        invoice_line_price: line.invoice_line_price,
+                        invoice_cus_line_quantity:
+                            line.invoice_cus_line_quantity,
+                        invoice_cus_line_price: line.invoice_cus_line_price,
                     },
                     { transaction: t }
                 );
@@ -88,7 +109,9 @@ class InvoiceCusController {
     // Update an existing invoice
     static async updateInvoice(req, res) {
         try {
-            const invoice = await Invoice.findByPk(req.params.invoice_id);
+            const invoice = await InvoiceCus.findByPk(
+                req.params.invoice_cus_id
+            );
             if (!invoice) {
                 return res.status(404).json({ message: "Invoice not found" });
             }
@@ -102,7 +125,9 @@ class InvoiceCusController {
     // Delete an invoice
     static async deleteInvoice(req, res) {
         try {
-            const invoice = await Invoice.findByPk(req.params.invoice_id);
+            const invoice = await InvoiceCus.findByPk(
+                req.params.invoice_cus_id
+            );
             if (!invoice) {
                 return res.status(404).json({ message: "Invoice not found" });
             }

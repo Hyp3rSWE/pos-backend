@@ -27,7 +27,7 @@ PUT http://localhost:3000/suppliers/1
 Content-Type: application/json
 
 {
-    "supplier_name": "Updated Supplier A",
+    "supplier_name": "Supplier A",
     "supplier_phone": "098-765-4321",
     "supplier_debt": 1200.00
 }

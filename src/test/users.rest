@@ -1,24 +1,24 @@
-# Test GET request for all users
-GET http://localhost:3000/users HTTP/1.1
-Content-Type: application/json
-
-# Test POST request to create a new user
-POST http://localhost:3000/users HTTP/1.1
+### User Login Test
+POST http://localhost:3000/users/login
 Content-Type: application/json
 
 {
-  "name": "John Doe",
-  "email": "johndoe@example.com"
+  "user_name": "admin",
+  "user_pass": "password123"
 }
 
-# Test PUT request to update a user's information
-PUT http://localhost:3000/users/1 HTTP/1.1
+### Create User Test
+POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "name": "John Updated",
-  "email": "johnupdated@example.com"
+  "user_role": "admin",
+  "user_name": "newuser",
+  "user_pass": "newpassword"
 }
 
-# Test DELETE request to delete a user
-DELETE http://localhost:3000/users/1 HTTP/1.1
+### Get All Users Test
+GET http://localhost:3000/users
+
+### Get User By ID Test
+GET http://localhost:3000/users/2

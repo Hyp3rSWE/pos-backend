@@ -6,7 +6,14 @@ class InvoiceCusController {
     // Get all invoices
     static async getAllInvoices(req, res) {
         try {
-            const invoices = await Invoice.findAll();
+            const invoices = await Invoice.findAll({
+                include: [{
+                    model: InvoiceLine,
+                    as: 'invoiceLines',
+                    where: { invoice_id: sequelize.col('Invoice.id') },
+                    required: false // Use false to include invoices even if they have no lines
+                }]
+            });
             res.json(invoices);
         } catch (error) {
             res.status(500).json({ message: "Error fetching invoices", error });

@@ -20,7 +20,7 @@ Content-Type: application/json
   "invoice_lines": [
     {
       "product_id": 1,
-      "product_variant_id": 2,
+      "product_variant_id": null,
       "invoice_sup_line_quantity": 3,
       "invoice_sup_line_price": 100
     },

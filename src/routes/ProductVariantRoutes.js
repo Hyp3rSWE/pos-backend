@@ -3,6 +3,7 @@ const ProductVariantController = require("../controllers/ProductVariantControlle
 
 const router = express.Router();
 
+router.get("/", ProductVariantController.getAllProductVariants);
 router.post("/", ProductVariantController.createProductVariant);
 router.get("/:id", ProductVariantController.getProductVariantById);
 router.put("/:id", ProductVariantController.updateProductVariant);

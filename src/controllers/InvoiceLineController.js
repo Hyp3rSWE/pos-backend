@@ -1,4 +1,7 @@
 const InvoiceLineCus = require("../models/InvoiceLine");
+const { sequelize } = require("../config/db");
+const Product = require("../models/Product");
+const ProductVariant = require("../models/ProductVariant");
 
 class InvoiceLineController {
     // Get all invoice lines
@@ -38,6 +41,7 @@ class InvoiceLineController {
 
     // Create a new invoice line
     static async createInvoiceLine(req, res) {
+        const transaction = await sequelize.transaction(); // Start a transaction
         try {
             const {
                 invoice_cus_id,
@@ -59,18 +63,54 @@ class InvoiceLineController {
                     .json({ message: "Missing required fields" });
             }
 
-            // Create the invoice line, handling possible null for product_variant_id
-            const newInvoiceLine = await InvoiceLineCus.create({
-                invoice_cus_id: invoice_cus_id,
-                product_id: product_id,
-                product_variant_id: product_variant_id || null, // Default to null if not provided
-                invoice_cus_line_quantity: invoice_cus_line_quantity,
-                invoice_cus_line_price: invoice_cus_line_price,
-            });
+            let stockItem;
+
+            if (product_variant_id) {
+                // Check stock in ProductVariant
+                stockItem = await ProductVariant.findOne({
+                    where: { variant_id: product_variant_id },
+                });
+            } else {
+                // Check stock in Product
+                stockItem = await Product.findOne({ where: { product_id } });
+            }
+
+            if (!stockItem) {
+                return res
+                    .status(404)
+                    .json({ message: "Product or variant not found" });
+            }
+
+            // Check if stock is sufficient
+            if (stockItem.variant_stock_level < invoice_cus_line_quantity) {
+                return res
+                    .status(400)
+                    .json({ message: "Insufficient stock available" });
+            }
+
+            // Decrement stock
+            stockItem.variant_stock_level -= invoice_cus_line_quantity;
+            await stockItem.save({ transaction });
+
+            // Create the invoice line
+            const newInvoiceLine = await InvoiceLineCus.create(
+                {
+                    invoice_cus_id: invoice_cus_id,
+                    product_id: product_id,
+                    product_variant_id: product_variant_id || null, // Default to null if not provided
+                    invoice_cus_line_quantity: invoice_cus_line_quantity,
+                    invoice_cus_line_price: invoice_cus_line_price,
+                },
+                { transaction }
+            );
+
+            // Commit the transaction
+            await transaction.commit();
 
             res.status(201).json(newInvoiceLine);
         } catch (error) {
             console.error("Error creating invoice line:", error);
+            await transaction.rollback(); // Rollback the transaction in case of error
             res.status(500).json({ message: "Internal server error" });
         }
     }

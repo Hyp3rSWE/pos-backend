@@ -1,6 +1,8 @@
 const { sequelize } = require("../config/db");
 const InvoiceSup = require("../models/InvoiceSup");
 const InvoiceLineSup = require("../models/InvoiceLineSup");
+const Product = require("../models/Product");
+const ProductVariant = require("../models/ProductVariant");
 
 class InvoiceSupController {
     // Get all invoices
@@ -74,8 +76,65 @@ class InvoiceSupController {
                 { transaction: t }
             );
 
-            // Step 2: Create the associated invoice lines
-            const invoiceLinePromises = invoice_lines.map((line) => {
+            // Step 2: Create the associated invoice lines and increment stock
+            const invoiceLinePromises = invoice_lines.map(async (line) => {
+                let product;
+                let productVariant;
+
+                // If product_variant_id is provided, update the product variant stock
+                if (line.product_variant_id) {
+                    // Find the product variant
+                    productVariant = await ProductVariant.findOne({
+                        where: { variant_id: line.product_variant_id },
+                        transaction: t, // Ensure this is in the same transaction
+                    });
+
+                    if (!productVariant) {
+                        throw new Error(
+                            `Product variant with ID ${line.product_variant_id} not found`
+                        );
+                    }
+
+                    // Update the product variant stock level (incrementing)
+                    await ProductVariant.update(
+                        {
+                            variant_stock_level:
+                                productVariant.variant_stock_level +
+                                line.invoice_sup_line_quantity,
+                        },
+                        {
+                            where: { variant_id: line.product_variant_id },
+                            transaction: t, // Ensure this is in the same transaction
+                        }
+                    );
+                } else {
+                    // If no product_variant_id is provided, increment the product stock
+                    product = await Product.findOne({
+                        where: { product_id: line.product_id },
+                        transaction: t, // Ensure this is in the same transaction
+                    });
+
+                    if (!product) {
+                        throw new Error(
+                            `Product with ID ${line.product_id} not found`
+                        );
+                    }
+
+                    // Update the product stock level (incrementing)
+                    await Product.update(
+                        {
+                            product_stock_level:
+                                product.product_stock_level +
+                                line.invoice_sup_line_quantity,
+                        },
+                        {
+                            where: { product_id: line.product_id },
+                            transaction: t, // Ensure this is in the same transaction
+                        }
+                    );
+                }
+
+                // Create the invoice line
                 return InvoiceLineSup.create(
                     {
                         invoice_sup_id: newInvoice.invoice_sup_id, // Use the generated invoice_id
@@ -89,7 +148,7 @@ class InvoiceSupController {
                 );
             });
 
-            // Wait for all invoice lines to be created
+            // Wait for all invoice lines to be created and stock updated
             await Promise.all(invoiceLinePromises);
 
             // Commit the transaction
@@ -102,7 +161,7 @@ class InvoiceSupController {
             await t.rollback();
             res.status(500).json({
                 message: "Error creating invoice and invoice lines",
-                error,
+                error: error.message,
             });
         }
     }

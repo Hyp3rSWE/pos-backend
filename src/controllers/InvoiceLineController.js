@@ -15,9 +15,14 @@ class InvoiceLineController {
     // Get a single invoice line by composite key
     static async getInvoiceLineById(req, res) {
         try {
-            const { invoice_id, product_id, product_variant_id } = req.params;
+            const { invoice_cus_id, product_id, product_variant_id } =
+                req.params;
             const invoiceLine = await InvoiceLineCus.findOne({
-                where: { invoice_id, product_id, product_variant_id },
+                where: {
+                    invoice_cus_id: invoice_cus_id,
+                    product_id: product_id,
+                    product_variant_id: product_variant_id,
+                },
             });
             if (!invoiceLine) {
                 return res
@@ -35,20 +40,20 @@ class InvoiceLineController {
     static async createInvoiceLine(req, res) {
         try {
             const {
-                invoice_id,
+                invoice_cus_id,
                 product_id,
                 product_variant_id,
-                invoice_line_quantity,
-                invoice_line_price,
+                invoice_cus_line_quantity,
+                invoice_cus_line_price,
             } = req.body;
 
             // Validate required fields
             if (
-                !invoice_id ||
+                !invoice_cus_id ||
                 !product_id ||
                 !product_variant_id ||
-                !invoice_line_quantity ||
-                !invoice_line_price
+                !invoice_cus_line_quantity ||
+                !invoice_cus_line_price
             ) {
                 return res
                     .status(400)
@@ -56,11 +61,11 @@ class InvoiceLineController {
             }
 
             const newInvoiceLine = await InvoiceLineCus.create({
-                invoice_id,
-                product_id,
-                product_variant_id,
-                invoice_line_quantity,
-                invoice_line_price,
+                invoice_cus_id: invoice_cus_id,
+                product_id: product_id,
+                product_variant_id: product_variant_id,
+                invoice_cus_line_quantity: invoice_cus_line_quantity,
+                invoice_cus_line_price: invoice_cus_line_price,
             });
             res.status(201).json(newInvoiceLine);
         } catch (error) {
@@ -72,11 +77,17 @@ class InvoiceLineController {
     // Update an existing invoice line
     static async updateInvoiceLine(req, res) {
         try {
-            const { invoice_id, product_id, product_variant_id } = req.params;
-            const { invoice_line_quantity, invoice_line_price } = req.body;
+            const { invoice_cus_id, product_id, product_variant_id } =
+                req.params;
+            const { invoice_cus_line_quantity, invoice_cus_line_price } =
+                req.body;
 
-            const invoiceLine = await InvoiceLine.findOne({
-                where: { invoice_id, product_id, product_variant_id },
+            const invoiceLine = await InvoiceLineCus.findOne({
+                where: {
+                    invoice_cus_id: invoice_cus_id,
+                    product_id: product_id,
+                    product_variant_id: product_variant_id,
+                },
             });
             if (!invoiceLine) {
                 return res
@@ -84,10 +95,11 @@ class InvoiceLineController {
                     .json({ message: "Invoice line not found" });
             }
 
-            if (invoice_line_quantity !== undefined)
-                invoiceLine.invoice_line_quantity = invoice_line_quantity;
-            if (invoice_line_price !== undefined)
-                invoiceLine.invoice_line_price = invoice_line_price;
+            if (invoice_cus_line_quantity !== undefined)
+                invoiceLine.invoice_cus_line_quantity =
+                    invoice_cus_line_quantity;
+            if (invoice_cus_line_price !== undefined)
+                invoiceLine.invoice_cus_line_price = invoice_cus_line_price;
 
             await invoiceLine.save();
             res.status(200).json(invoiceLine);
@@ -100,10 +112,15 @@ class InvoiceLineController {
     // Delete an invoice line
     static async deleteInvoiceLine(req, res) {
         try {
-            const { invoice_id, product_id, product_variant_id } = req.params;
+            const { invoice_cus_id, product_id, product_variant_id } =
+                req.params;
 
             const invoiceLine = await InvoiceLineCus.findOne({
-                where: { invoice_id, product_id, product_variant_id },
+                where: {
+                    invoice_cus_id: invoice_cus_id,
+                    product_id: product_id,
+                    product_variant_id: product_variant_id,
+                },
             });
             if (!invoiceLine) {
                 return res

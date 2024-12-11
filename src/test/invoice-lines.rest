@@ -13,11 +13,11 @@ POST http://localhost:3000/invoice-lines
 Content-Type: application/json
 
 {
-    "invoice_id": 1,
+    "invoice_cus_id": 1,
     "product_id": 1,
-    "product_variant_id": 2,
-    "invoice_line_quantity": 4,
-    "invoice_line_price": 50.00
+    "product_variant_id": 3,
+    "invoice_cus_line_quantity": 4,
+    "invoice_cus_line_price": 50.00
 }
 
 ###

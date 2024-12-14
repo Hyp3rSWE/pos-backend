@@ -1,17 +1,17 @@
 ### Get all invoices
-GET http://localhost:3000/invoices
+GET http://localhost:3001/invoices
 Content-Type: application/json
 
 ###
 
 ### Get an invoice by ID
-GET http://localhost:3000/invoices/5
+GET http://localhost:3001/invoices/5
 Content-Type: application/json
 
 ###
 
 ### Create a new invoice
-POST http://localhost:3000/invoices
+POST http://localhost:3001/invoices
 Content-Type: application/json
 
 {
@@ -36,7 +36,7 @@ Content-Type: application/json
 ###
 
 ### Update an existing invoice
-PUT http://localhost:3000/invoices/1
+PUT http://localhost:3001/invoices/1
 Content-Type: application/json
 
 {
@@ -47,5 +47,5 @@ Content-Type: application/json
 ###
 
 ### Delete an invoice
-DELETE http://localhost:3000/invoices/6
+DELETE http://localhost:3001/invoices/6
 Content-Type: application/json

@@ -1,5 +1,5 @@
 # Create a new debt record
-POST http://localhost:3000/debt-cus
+POST http://localhost:3001/debt-cus
 Content-Type: application/json
 
 {
@@ -11,17 +11,17 @@ Content-Type: application/json
 ###
 
 # Get all debt records
-GET http://localhost:3000/debt-cus
+GET http://localhost:3001/debt-cus
 
 ###
 
 # Get a debt record by ID
-GET http://localhost:3000/debt-cus/1
+GET http://localhost:3001/debt-cus/1
 
 ###
 
 # Update a debt record
-PUT http://localhost:3000/debt-cus/1/2023-12-11T10:00:00Z
+PUT http://localhost:3001/debt-cus/1/2023-12-11T10:00:00Z
 Content-Type: application/json
 
 {
@@ -31,4 +31,4 @@ Content-Type: application/json
 ###
 
 # Delete a debt record
-DELETE http://localhost:3000/debt-cus/1/2023-12-11T10:00:00Z
+DELETE http://localhost:3001/debt-cus/1/2023-12-11T10:00:00Z

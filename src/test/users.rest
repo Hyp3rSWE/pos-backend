@@ -1,5 +1,5 @@
 ### User Login Test
-POST http://localhost:3000/users/login
+POST http://localhost:3001/users/login
 Content-Type: application/json
 
 {
@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ### Create User Test
-POST http://localhost:3000/users
+POST http://localhost:3001/users
 Content-Type: application/json
 
 {
@@ -18,7 +18,7 @@ Content-Type: application/json
 }
 
 ### Get All Users Test
-GET http://localhost:3000/users
+GET http://localhost:3001/users
 
 ### Get User By ID Test
-GET http://localhost:3000/users/2
+GET http://localhost:3001/users/2

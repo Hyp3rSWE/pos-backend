@@ -1,17 +1,17 @@
 # Get all suppliers
-GET http://localhost:3000/suppliers
+GET http://localhost:3001/suppliers
 Content-Type: application/json
 
 ###
 
 # Get a supplier by ID
-GET http://localhost:3000/suppliers/1
+GET http://localhost:3001/suppliers/1
 Content-Type: application/json
 
 ###
 
 # Create a new supplier
-POST http://localhost:3000/suppliers
+POST http://localhost:3001/suppliers
 Content-Type: application/json
 
 {
@@ -23,7 +23,7 @@ Content-Type: application/json
 ###
 
 # Update an existing supplier
-PUT http://localhost:3000/suppliers/1
+PUT http://localhost:3001/suppliers/1
 Content-Type: application/json
 
 {
@@ -35,5 +35,5 @@ Content-Type: application/json
 ###
 
 # Delete a supplier
-DELETE http://localhost:3000/suppliers/1
+DELETE http://localhost:3001/suppliers/1
 Content-Type: application/json

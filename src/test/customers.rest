@@ -1,5 +1,5 @@
 # Create a new customer
-POST http://localhost:3000/customers
+POST http://localhost:3001/customers
 Content-Type: application/json
 
 {
@@ -11,17 +11,17 @@ Content-Type: application/json
 ###
 
 # Get all customers
-GET http://localhost:3000/customers
+GET http://localhost:3001/customers
 
 ###
 
 # Get a customer by ID
-GET http://localhost:3000/customers/1
+GET http://localhost:3001/customers/1
 
 ###
 
 # Update a customer
-PUT http://localhost:3000/customers/1
+PUT http://localhost:3001/customers/1
 Content-Type: application/json
 
 {
@@ -33,4 +33,4 @@ Content-Type: application/json
 ###
 
 # Delete a customer
-DELETE http://localhost:3000/customers/9
+DELETE http://localhost:3001/customers/9

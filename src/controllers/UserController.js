@@ -100,18 +100,39 @@ class UserController {
             res.status(500).json({ error: 'Failed to delete user' });
         }
     }
+    static async getUserByRole(req, res) {
+        try {
+            const { role } = req.params;
+            const users = await User.findAll({
+                where: { user_role: role },
+                attributes: { exclude: ['user_pass'] },
+            });
+
+            if (!users || users.length === 0) {
+                return res.status(404).json({ error: `No users found with role ${role}` });
+            }
+
+            res.status(200).json(users);
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to fetch users by role' });
+        }
+    }
     static async login(req, res) {
-        const { user_name, user_pass } = req.body;
+        const { user_name, user_pass, role } = req.body;
     
         try {
             const user = await User.findOne({ where: { user_name } });
-            
+    
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
     
+            if (user.user_role !== role) {
+                return res.status(403).json({ error: 'Role mismatch' });
+            }
+    
             const isMatch = await bcrypt.compare(user_pass, user.user_pass);
-            
+    
             if (!isMatch) {
                 return res.status(401).json({ error: 'Invalid password' });
             }
@@ -119,11 +140,17 @@ class UserController {
             req.session.userId = user.user_id;
             req.session.userRole = user.user_role;
     
-            res.status(200).json({ message: 'Login successful' });
+            res.status(200).json({
+                message: 'Login successful',
+                user_id: user.user_id,
+                user_role: user.user_role
+            });
         } catch (error) {
             res.status(500).json({ error: 'Error during login' });
         }
     }
+    
+    
 }
 
 module.exports = UserController;

@@ -29,7 +29,6 @@ class InvoiceSupController {
     }
 
     // Get a single invoice by ID
-    // Get a single invoice by ID without using `include` for lines
     static async getInvoiceById(req, res) {
         try {
             const invoice = await InvoiceSup.findByPk(

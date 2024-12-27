@@ -21,4 +21,6 @@ Content-Type: application/json
 GET http://localhost:3001/users
 
 ### Get User By ID Test
-GET http://localhost:3001/users/2
+GET http://localhost:3001/users/role/cashier
+
+

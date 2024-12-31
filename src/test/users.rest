@@ -13,8 +13,8 @@ Content-Type: application/json
 
 {
   "user_role": "admin",
-  "user_name": "randazina",
-  "user_pass": "rtmonamour"
+  "user_name": "newuser",
+  "user_pass": "newpassword"
 }
 
 ### Get All Users Test

@@ -19,7 +19,8 @@ Content-Type: application/json
     "product_barcode": "1234567890123",
     "product_price": 100.00,
     "product_name": "Product Example",
-    "product_stock_level": 50
+    "product_stock_level": 50,
+    "product_cost": 50
 }
 
 ###
@@ -31,6 +32,17 @@ Content-Type: application/json
 {
     "product_price": 120.00,
     "product_stock_level": 60
+}
+
+# Update an existing product
+###
+
+PUT http://localhost:3001/products/updateQuantity/1
+Content-Type: application/json
+
+{
+    "new_cost": 120.00,
+    "new_product_stock_level": 60
 }
 
 ###

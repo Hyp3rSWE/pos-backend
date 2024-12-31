@@ -37,7 +37,7 @@ Content-Type: application/json
 # Update an existing product
 ###
 
-PUT http:/localhost:3001/products/updateQuantity/1
+PUT http://localhost:3001/products/updateQuantity/1
 Content-Type: application/json
 
 {

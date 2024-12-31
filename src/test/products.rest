@@ -37,11 +37,10 @@ Content-Type: application/json
 # Update an existing product
 ###
 
-PUT http://localhost:3001/products/updateQuantity/1
+PUT http://localhost:3001/products/updateQuantity/2
 Content-Type: application/json
 
 {
-    "new_cost": 120.00,
     "new_product_stock_level": 60
 }
 

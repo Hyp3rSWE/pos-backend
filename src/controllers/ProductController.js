@@ -5,7 +5,7 @@ const Supplier = require('../models/Supplier');
 // Create a new product
 exports.createProduct = async (req, res) => {
     try {
-        const { supplier_id, product_barcode, product_price, product_name, product_stock_level } = req.body;
+        const { supplier_id, product_barcode, product_price , product_cost, product_name, product_stock_level } = req.body;
 
         // Validate supplier existence
         const supplier = await Supplier.findByPk(supplier_id);
@@ -18,6 +18,7 @@ exports.createProduct = async (req, res) => {
             supplier_id,
             product_barcode,
             product_price,
+            product_cost,
             product_name,
             product_stock_level,
         });
@@ -113,6 +114,40 @@ exports.updateProduct = async (req, res) => {
         res.status(500).json({ message: 'Error updating product', error: error.message });
     }
 };
+
+
+
+exports.updateQuantity = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { new_product_stock_level, new_cost } = req.body;
+
+        // Fetch the existing product
+        const product = await Product.findByPk(id);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        // Get the old cost and old stock level
+        const old_cost = product.product_cost;
+        const old_product_stock_level = product.product_stock_level;
+
+        // Calculate the new weighted average cost
+        const cost = (old_cost * old_product_stock_level + new_cost * new_product_stock_level) / (old_product_stock_level + new_product_stock_level);
+
+        // Update the product with the new stock level and the newly calculated cost
+        await product.update({
+            product_stock_level: new_product_stock_level,
+            product_cost: cost,
+        });
+
+        // Respond with the updated product
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating product', error: error.message });
+    }
+};
+
 
 // Delete a product
 exports.deleteProduct = async (req, res) => {

@@ -122,6 +122,7 @@ exports.updateQuantity = async (req, res) => {
         const { id } = req.params;
         const { new_product_stock_level, new_cost } = req.body;
 
+
         // Fetch the existing product
         const product = await Product.findByPk(id);
         if (!product) {
@@ -132,9 +133,16 @@ exports.updateQuantity = async (req, res) => {
         const old_cost = product.product_cost;
         const old_product_stock_level = product.product_stock_level;
 
-        // Calculate the new weighted average cost
-        const cost = (old_cost * old_product_stock_level + new_cost * new_product_stock_level) / (old_product_stock_level + new_product_stock_level);
+        cost = 0 ;
+        if (new_cost == null) {
+            cost = old_cost;
+        }
+        else{
+            // Calculate the new weighted average cost
+            cost = (old_cost * old_product_stock_level + new_cost * new_product_stock_level) / (old_product_stock_level + new_product_stock_level);
 
+        }
+       
         // Update the product with the new stock level and the newly calculated cost
         await product.update({
             product_stock_level: new_product_stock_level + old_product_stock_level,

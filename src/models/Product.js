@@ -22,6 +22,10 @@ const Product = sequelize.define('Product', {
         type: DataTypes.DOUBLE,
         allowNull: false,
     },
+    product_cost : {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+    },
     product_name: {
         type: DataTypes.STRING(255),
         allowNull: false,

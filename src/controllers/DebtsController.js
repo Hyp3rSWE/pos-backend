@@ -124,10 +124,62 @@ const deleteDebt = async (req, res) => {
     }
 };
 
+const subtractDebt = async (req, res) => {
+    const { customer_id } = req.params;
+    const { amount } = req.body; // Amount to subtract from the customer's debt
+
+    if (!amount || isNaN(amount) || amount <= 0) {
+        return res.status(400).json({ message: 'Invalid amount provided.' });
+    }
+
+    try {
+        // Fetch the last debt record for the customer
+        const lastDebt = await DebtCus.findOne({
+            where: { customer_id },
+            order: [['debt_cus_timestamp', 'DESC']],
+        });
+
+        if (!lastDebt) {
+            return res.status(404).json({ message: 'No debt record found for this customer.' });
+        }
+
+        // Calculate the new debt amount
+        let newDebtAmount = lastDebt.debt_cus_amount - amount;
+
+        // Ensure the debt does not go negative
+        if (newDebtAmount < 0) {
+            newDebtAmount = 0;
+        }
+
+        // Insert a new debt record with the updated amount
+        const newDebt = await DebtCus.create({
+            customer_id,
+            debt_cus_amount: newDebtAmount,
+            debt_cus_timestamp: new Date().toISOString(),
+        });
+
+        // Update the customer's debt in the Customer table
+        const customer = await Customer.findByPk(customer_id);
+        if (customer) {
+            customer.customer_debt = newDebtAmount;
+            await customer.save();
+        }
+
+        res.status(201).json({
+            message: 'Debt subtracted and new record created successfully.',
+            newDebt,
+        });
+    } catch (error) {
+        console.error('Error subtracting debt:', error);
+        res.status(500).json({ message: 'Internal server error.', error });
+    }
+};
+
 module.exports = {
     createDebt,
     getAllDebts,
+    getDebtByCus,
     updateDebt,
     deleteDebt,
-    getDebtByCus,
+    subtractDebt
 };

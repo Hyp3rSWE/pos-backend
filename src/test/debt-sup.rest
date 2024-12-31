@@ -7,6 +7,15 @@ Content-Type: application/json
     "debt_sup_amount": 100,
     "debt_sup_timestamp": "2023-12-11T10:00:00.000Z"
 }
+###
+
+# Subtract an amount from a supplier's debt
+PATCH http://localhost:3001/debt-sup/1
+Content-Type: application/json
+
+{
+    "amount": 49.75
+}
 
 ###
 

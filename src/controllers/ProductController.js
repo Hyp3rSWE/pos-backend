@@ -137,7 +137,7 @@ exports.updateQuantity = async (req, res) => {
 
         // Update the product with the new stock level and the newly calculated cost
         await product.update({
-            product_stock_level: new_product_stock_level,
+            product_stock_level: new_product_stock_level + old_product_stock_level,
             product_cost: cost,
         });
 

@@ -8,6 +8,10 @@ Content-Type: application/json
 GET http://localhost:3001/invoices-sup/1
 Content-Type: application/json
 
+### Get an invoice by Supplier ID
+GET http://localhost:3001/invoices-sup/sup-1
+Content-Type: application/json
+
 ###
 
 ### Create a new invoice

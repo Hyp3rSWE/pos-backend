@@ -57,6 +57,39 @@ class InvoiceSupController {
         }
     }
 
+    static async getInvoiceBySupId(req, res) {
+        try {
+            const { sup_id } = req.params;
+
+            // Fetch invoices for the given supplier
+            const invoices = await InvoiceSup.findAll({
+                where: { supplier_id: sup_id },
+            });
+
+            if (!invoices || invoices.length === 0) {
+                return res.status(404).json({ message: "No invoices found for the supplier." });
+            }
+
+            // Add invoice line details for each invoice
+            const invoicesWithLines = await Promise.all(
+                invoices.map(async (invoice) => {
+                    const invoiceLines = await InvoiceLineSup.findAll({
+                        where: { invoice_sup_id: invoice.invoice_sup_id },
+                    });
+                    return {
+                        ...invoice.get(),
+                        invoiceLines,
+                    };
+                })
+            );
+
+            return res.json(invoicesWithLines);
+        } catch (error) {
+            console.error("Error fetching invoices:", error);
+            return res.status(500).json({ message: "Internal server error.", error });
+        }
+    }
+
     // Create a new invoice
     static async createInvoice(req, res) {
         const { invoice_sup_total_amount, supplier_id, invoice_lines } =

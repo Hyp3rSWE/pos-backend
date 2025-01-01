@@ -1,0 +1,14 @@
+### Get Total Stock Value
+GET http://localhost:3001/statistics/total-stock
+Content-Type: application/json
+###
+
+### Get Total Supplier Debt
+GET http://localhost:3001/statistics/total-supplier-debt
+Content-Type: application/json
+
+###
+
+### Get Total Customer Debt
+GET http://localhost:3001/statistics/total-customer-debt
+Content-Type: application/json

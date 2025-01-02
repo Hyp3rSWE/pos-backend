@@ -50,6 +50,13 @@ class ProductVariantController {
                 return res.status(404).json({ error: 'Product not found' });
             }
 
+            // Update the product's stock level
+            const additionalStock = variant_stock_level * variant_quantity;
+            const newProductStockLevel = product.product_stock_level + additionalStock;
+
+            await product.update({ product_stock_level: newProductStockLevel });
+
+            // Create the new product variant
             const variant = await ProductVariant.create({
                 product_id,
                 variant_barcode,
@@ -57,6 +64,16 @@ class ProductVariantController {
                 variant_quantity,
                 variant_stock_level,
             });
+
+            // Update all product variants' stock levels
+            const productVariants = await ProductVariant.findAll({
+                where: { product_id: product.product_id }
+            });
+
+            await Promise.all(productVariants.map(async (variant) => {
+                const newVariantStockLevel = Math.floor(newProductStockLevel / variant.variant_quantity);
+                await variant.update({ variant_stock_level: newVariantStockLevel });
+            }));
 
             res.status(201).json({ message: 'Product variant created successfully', variant });
         } catch (error) {

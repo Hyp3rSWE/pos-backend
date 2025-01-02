@@ -1,11 +1,12 @@
 const Product = require('../models/Product');
 const Supplier = require('../models/Supplier');
+const ProductVariant = require('../models/ProductVariant');
 
 
 // Create a new product
 exports.createProduct = async (req, res) => {
     try {
-        const { supplier_id, product_barcode, product_price , product_cost, product_name, product_stock_level } = req.body;
+        const { supplier_id, product_barcode, product_price, product_cost, product_name, product_stock_level } = req.body;
 
         // Validate supplier existence
         const supplier = await Supplier.findByPk(supplier_id);
@@ -22,6 +23,16 @@ exports.createProduct = async (req, res) => {
             product_name,
             product_stock_level,
         });
+
+        // Find and update all product variants associated with the new product
+        const productVariants = await ProductVariant.findAll({
+            where: { product_id: product.product_id }
+        });
+
+        await Promise.all(productVariants.map(async (variant) => {
+            const newVariantStockLevel = Math.floor(product_stock_level / variant.variant_quantity);
+            await variant.update({ variant_stock_level: newVariantStockLevel });
+        }));
 
         res.status(201).json(product);
     } catch (error) {
@@ -133,16 +144,16 @@ exports.updateQuantity = async (req, res) => {
         const old_cost = product.product_cost;
         const old_product_stock_level = product.product_stock_level;
 
-        cost = 0 ;
+        cost = 0;
         if (new_cost == null) {
             cost = old_cost;
         }
-        else{
+        else {
             // Calculate the new weighted average cost
             cost = (old_cost * old_product_stock_level + new_cost * new_product_stock_level) / (old_product_stock_level + new_product_stock_level);
 
         }
-       
+
         // Update the product with the new stock level and the newly calculated cost
         await product.update({
             product_stock_level: new_product_stock_level + old_product_stock_level,

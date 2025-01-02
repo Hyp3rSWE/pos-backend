@@ -60,14 +60,11 @@ class InvoiceCusController {
 
     // Create a new invoice
     static async createInvoice(req, res) {
-        const { invoice_cus_total_amount, customer_id, invoice_lines } =
-            req.body;
+        const { invoice_cus_total_amount, customer_id, invoice_lines } = req.body;
 
-        // Start a transaction to ensure both operations (invoice and invoice lines) are handled together
         const t = await sequelize.transaction();
 
         try {
-            // Step 1: Create the invoice
             const newInvoice = await InvoiceCus.create(
                 {
                     invoice_cus_total_amount,
@@ -76,16 +73,15 @@ class InvoiceCusController {
                 { transaction: t }
             );
 
-            // Step 2: Create the associated invoice lines and decrement product stock
             const invoiceLinePromises = invoice_lines.map(async (line) => {
                 let product;
                 let productVariant;
 
                 if (line.product_variant_id) {
-                    // If product_variant_id is provided, decrement the stock for the product variant
                     productVariant = await ProductVariant.findOne({
                         where: { variant_id: line.product_variant_id },
-                        transaction: t, // Ensure this is in the same transaction
+                        attributes: ['variant_id', 'variant_stock_level', 'product_id', 'variant_quantity'],
+                        transaction: t,
                     });
 
                     if (!productVariant) {
@@ -94,33 +90,54 @@ class InvoiceCusController {
                         );
                     }
 
-                    // Check if the product variant has enough stock
-                    if (
-                        productVariant.variant_stock_level <
-                        line.invoice_cus_line_quantity
-                    ) {
+                    product = await Product.findOne({
+                        where: { product_id: productVariant.product_id },
+                        transaction: t,
+                    });
+
+                    if (!product) {
+                        throw new Error(
+                            `Product with ID ${productVariant.product_id} not found`
+                        );
+                    }
+
+                    const variantQuantity = productVariant.variant_quantity;
+                    const newProductStockLevel = product.product_stock_level -
+                        (line.invoice_cus_line_quantity * variantQuantity);
+
+                    if (newProductStockLevel < 0) {
                         throw new Error(
                             `Insufficient stock for product variant ${line.product_variant_id}`
                         );
                     }
 
-                    // Update the product variant stock level (decrementing)
+                    await Product.update(
+                        {
+                            product_stock_level: newProductStockLevel,
+                        },
+                        {
+                            where: { product_id: productVariant.product_id },
+                            transaction: t,
+                        }
+                    );
+
+                    const newVariantStockLevel = Math.floor(newProductStockLevel / variantQuantity);
+
                     await ProductVariant.update(
                         {
-                            variant_stock_level:
-                                productVariant.variant_stock_level -
-                                line.invoice_cus_line_quantity,
+                            variant_stock_level: newVariantStockLevel,
                         },
                         {
                             where: { variant_id: line.product_variant_id },
-                            transaction: t, // Ensure this is in the same transaction
+                            transaction: t,
                         }
                     );
+
+                    line.product_id = productVariant.product_id;
                 } else {
-                    // If no product_variant_id, decrement the stock for the product
                     product = await Product.findOne({
                         where: { product_id: line.product_id },
-                        transaction: t, // Ensure this is in the same transaction
+                        transaction: t,
                     });
 
                     if (!product) {
@@ -129,54 +146,65 @@ class InvoiceCusController {
                         );
                     }
 
-                    // Check if the product has enough stock
-                    if (
-                        product.product_stock_level <
-                        line.invoice_cus_line_quantity
-                    ) {
+                    const newProductStockLevel = product.product_stock_level -
+                        line.invoice_cus_line_quantity;
+
+                    if (newProductStockLevel < 0) {
                         throw new Error(
                             `Insufficient stock for product ${line.product_id}`
                         );
                     }
 
-                    // Update the product stock level (decrementing)
                     await Product.update(
                         {
-                            product_stock_level:
-                                product.product_stock_level -
-                                line.invoice_cus_line_quantity,
+                            product_stock_level: newProductStockLevel,
                         },
                         {
                             where: { product_id: line.product_id },
-                            transaction: t, // Ensure this is in the same transaction
+                            transaction: t,
                         }
                     );
+
+                    // Find the product variant associated with the product
+                    productVariant = await ProductVariant.findOne({
+                        where: { product_id: line.product_id },
+                        transaction: t,
+                    });
+
+                    if (productVariant) {
+                        const variantQuantity = productVariant.variant_quantity;
+                        const newVariantStockLevel = Math.floor(newProductStockLevel / variantQuantity);
+
+                        await ProductVariant.update(
+                            {
+                                variant_stock_level: newVariantStockLevel,
+                            },
+                            {
+                                where: { variant_id: productVariant.variant_id },
+                                transaction: t,
+                            }
+                        );
+                    }
                 }
 
-                // Create the invoice line
                 return InvoiceLineCus.create(
                     {
-                        invoice_cus_id: newInvoice.invoice_cus_id, // Use the generated invoice_id
+                        invoice_cus_id: newInvoice.invoice_cus_id,
                         product_id: line.product_id,
                         product_variant_id: line.product_variant_id,
-                        invoice_cus_line_quantity:
-                            line.invoice_cus_line_quantity,
+                        invoice_cus_line_quantity: line.invoice_cus_line_quantity,
                         invoice_cus_line_price: line.invoice_cus_line_price,
                     },
                     { transaction: t }
                 );
             });
 
-            // Wait for all invoice lines to be created and stock updated
             await Promise.all(invoiceLinePromises);
 
-            // Commit the transaction
             await t.commit();
 
-            // Respond with the created invoice
             res.status(201).json(newInvoice);
         } catch (error) {
-            // Rollback the transaction in case of an error
             await t.rollback();
             res.status(500).json({
                 message: "Error creating invoice and invoice lines",

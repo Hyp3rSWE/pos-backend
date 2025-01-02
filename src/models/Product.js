@@ -17,12 +17,13 @@ const Product = sequelize.define('Product', {
     },
     product_barcode: {
         type: DataTypes.STRING(50),
+        unique: true
     },
     product_price: {
         type: DataTypes.DOUBLE,
         allowNull: false,
     },
-    product_cost : {
+    product_cost: {
         type: DataTypes.DOUBLE,
         allowNull: false,
     },

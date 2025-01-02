@@ -16,11 +16,11 @@ Content-Type: application/json
 
 {
     "supplier_id": 1,  
-    "product_barcode": "1234567890123",
+    "product_barcode": "12345",
     "product_price": 100.00,
-    "product_name": "Product Example",
-    "product_stock_level": 50,
-    "product_cost": 50
+    "product_name": "Tuna",
+    "product_stock_level": 100,
+    "product_cost": 80
 }
 
 ###

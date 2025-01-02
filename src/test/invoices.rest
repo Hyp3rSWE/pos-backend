@@ -19,16 +19,10 @@ Content-Type: application/json
   "customer_id": 1,
   "invoice_lines": [
     {
-      "product_id": 1,
-      "product_variant_id": 1,
-      "invoice_cus_line_quantity": 3,
-      "invoice_cus_line_price": 100
-    },
-    {
-      "product_id": 2,
+      "product_id": 27,
       "product_variant_id": null,
       "invoice_cus_line_quantity": 1,
-      "invoice_cus_line_price": 200
+      "invoice_cus_line_price": 300
     }
   ]
 }

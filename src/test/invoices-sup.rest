@@ -19,20 +19,14 @@ POST http://localhost:3001/invoices-sup
 Content-Type: application/json
 
 {
-  "invoice_sup_total_amount": 500,
+  "invoice_sup_total_amount": 300,
   "supplier_id": 1,
   "invoice_lines": [
     {
-      "product_id": 1,
+      "product_id": 27,
       "product_variant_id": null,
-      "invoice_sup_line_quantity": 3,
-      "invoice_sup_line_price": 100
-    },
-    {
-      "product_id": 2,
-      "product_variant_id": 3,
-      "invoice_sup_line_quantity": 1,
-      "invoice_sup_line_price": 200
+      "invoice_sup_line_quantity": 8,
+      "invoice_sup_line_price": 300
     }
   ]
 }

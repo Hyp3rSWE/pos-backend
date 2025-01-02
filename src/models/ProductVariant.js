@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const {sequelize} = require('../config/db');
+const { sequelize } = require('../config/db');
 const Product = require('./Product');
 
 const ProductVariant = sequelize.define('ProductVariant', {
@@ -17,6 +17,7 @@ const ProductVariant = sequelize.define('ProductVariant', {
     },
     variant_barcode: {
         type: DataTypes.STRING(50),
+        unique: true
     },
     variant_price: {
         type: DataTypes.DOUBLE,
@@ -31,10 +32,10 @@ const ProductVariant = sequelize.define('ProductVariant', {
         defaultValue: 0,
     },
 },
-{
-    tableName: 'product_variant', 
-    timestamps: false, 
-}
+    {
+        tableName: 'product_variant',
+        timestamps: false,
+    }
 );
 
 ProductVariant.belongsTo(Product, { foreignKey: 'product_id' });

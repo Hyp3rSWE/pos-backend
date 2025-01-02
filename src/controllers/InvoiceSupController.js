@@ -60,16 +60,16 @@ class InvoiceSupController {
     static async getInvoiceBySupId(req, res) {
         try {
             const { sup_id } = req.params;
-    
+
             // Fetch invoices for the given supplier
             const invoices = await InvoiceSup.findAll({
                 where: { supplier_id: sup_id },
             });
-    
+
             if (!invoices || invoices.length === 0) {
                 return res.status(404).json({ message: "No invoices found for the supplier." });
             }
-    
+
             // Add invoice line and product details for each invoice
             const invoicesWithDetails = await Promise.all(
                 invoices.map(async (invoice) => {
@@ -82,7 +82,7 @@ class InvoiceSupController {
                             },
                         ],
                     });
-    
+
                     const detailedLines = invoiceLines.map((line) => {
                         const product = line.Product;
                         return {
@@ -93,33 +93,31 @@ class InvoiceSupController {
                             product_price: product?.product_price,
                         };
                     });
-    
+
                     return {
                         ...invoice.get(),
-                        date: invoice.createdAt, 
+                        date: invoice.createdAt,
                         invoiceLines: detailedLines,
                     };
                 })
             );
-    
+
             return res.json(invoicesWithDetails);
         } catch (error) {
             console.error("Error fetching invoices:", error);
             return res.status(500).json({ message: "Internal server error.", error });
         }
     }
-    
+
 
     // Create a new invoice
     static async createInvoice(req, res) {
         const { invoice_sup_total_amount, supplier_id, invoice_lines } =
             req.body;
 
-        // Start a transaction to ensure both operations (invoice and invoice lines) are handled together
         const t = await sequelize.transaction();
 
         try {
-            // Step 1: Create the invoice
             const newInvoice = await InvoiceSup.create(
                 {
                     invoice_sup_total_amount,
@@ -128,17 +126,15 @@ class InvoiceSupController {
                 { transaction: t }
             );
 
-            // Step 2: Create the associated invoice lines and increment stock
             const invoiceLinePromises = invoice_lines.map(async (line) => {
                 let product;
                 let productVariant;
 
-                // If product_variant_id is provided, update the product variant stock
                 if (line.product_variant_id) {
-                    // Find the product variant
                     productVariant = await ProductVariant.findOne({
                         where: { variant_id: line.product_variant_id },
-                        transaction: t, // Ensure this is in the same transaction
+                        attributes: ['variant_id', 'variant_quantity', 'product_id'],
+                        transaction: t,
                     });
 
                     if (!productVariant) {
@@ -147,23 +143,49 @@ class InvoiceSupController {
                         );
                     }
 
-                    // Update the product variant stock level (incrementing)
+                    product = await Product.findOne({
+                        where: { product_id: productVariant.product_id },
+                        transaction: t,
+                    });
+
+                    if (!product) {
+                        throw new Error(
+                            `Product with ID ${productVariant.product_id} not found`
+                        );
+                    }
+
+                    const variantQuantity = productVariant.variant_quantity;
+                    const newProductStockLevel = product.product_stock_level +
+                        (line.invoice_sup_line_quantity * variantQuantity);
+
+                    await Product.update(
+                        {
+                            product_stock_level: newProductStockLevel,
+                        },
+                        {
+                            where: { product_id: productVariant.product_id },
+                            transaction: t,
+                        }
+                    );
+
+                    const newVariantStockLevel = Math.floor(newProductStockLevel / variantQuantity);
+
                     await ProductVariant.update(
                         {
-                            variant_stock_level:
-                                productVariant.variant_stock_level +
-                                line.invoice_sup_line_quantity,
+                            variant_stock_level: newVariantStockLevel,
                         },
                         {
                             where: { variant_id: line.product_variant_id },
-                            transaction: t, // Ensure this is in the same transaction
+                            transaction: t,
                         }
                     );
+
+                    // Use the product_id from the productVariant
+                    line.product_id = productVariant.product_id;
                 } else {
-                    // If no product_variant_id is provided, increment the product stock
                     product = await Product.findOne({
                         where: { product_id: line.product_id },
-                        transaction: t, // Ensure this is in the same transaction
+                        transaction: t,
                     });
 
                     if (!product) {
@@ -172,7 +194,6 @@ class InvoiceSupController {
                         );
                     }
 
-                    // Update the product stock level (incrementing)
                     await Product.update(
                         {
                             product_stock_level:
@@ -181,15 +202,38 @@ class InvoiceSupController {
                         },
                         {
                             where: { product_id: line.product_id },
-                            transaction: t, // Ensure this is in the same transaction
+                            transaction: t,
                         }
                     );
+
+                    // Find the product variant associated with the product
+                    productVariant = await ProductVariant.findOne({
+                        where: { product_id: line.product_id },
+                        transaction: t,
+                    });
+
+                    if (productVariant) {
+                        const variantQuantity = productVariant.variant_quantity;
+                        const newProductStockLevel = product.product_stock_level +
+                            line.invoice_sup_line_quantity;
+
+                        const newVariantStockLevel = Math.floor(newProductStockLevel / variantQuantity);
+
+                        await ProductVariant.update(
+                            {
+                                variant_stock_level: newVariantStockLevel,
+                            },
+                            {
+                                where: { variant_id: productVariant.variant_id },
+                                transaction: t,
+                            }
+                        );
+                    }
                 }
 
-                // Create the invoice line
                 return InvoiceLineSup.create(
                     {
-                        invoice_sup_id: newInvoice.invoice_sup_id, // Use the generated invoice_id
+                        invoice_sup_id: newInvoice.invoice_sup_id,
                         product_id: line.product_id,
                         product_variant_id: line.product_variant_id,
                         invoice_sup_line_quantity:
@@ -200,16 +244,12 @@ class InvoiceSupController {
                 );
             });
 
-            // Wait for all invoice lines to be created and stock updated
             await Promise.all(invoiceLinePromises);
 
-            // Commit the transaction
             await t.commit();
 
-            // Respond with the created invoice
             res.status(201).json(newInvoice);
         } catch (error) {
-            // Rollback the transaction in case of an error
             await t.rollback();
             res.status(500).json({
                 message: "Error creating invoice and invoice lines",

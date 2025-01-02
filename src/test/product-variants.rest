@@ -15,11 +15,11 @@ POST http://localhost:3001/product-variants
 Content-Type: application/json
 
 {
-    "product_id": 1,  
-    "variant_barcode": "9876543210",
-    "variant_price": 150.00,
-    "variant_quantity": 100,
-    "variant_stock_level": 80
+    "product_id": 27,
+    "variant_barcode": "123",
+    "variant_price": 300,
+    "variant_quantity": 2,
+    "variant_stock_level": 50
 }
 
 ###

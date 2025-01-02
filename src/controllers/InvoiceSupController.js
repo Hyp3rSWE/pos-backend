@@ -128,10 +128,11 @@ class InvoiceSupController {
 
             const invoiceLinePromises = invoice_lines.map(async (line) => {
                 let product;
-                let productVariant;
+                let productVariants;
 
                 if (line.product_variant_id) {
-                    productVariant = await ProductVariant.findOne({
+                    // Fetch the product variant and product
+                    const productVariant = await ProductVariant.findOne({
                         where: { variant_id: line.product_variant_id },
                         attributes: ['variant_id', 'variant_quantity', 'product_id'],
                         transaction: t,
@@ -154,9 +155,14 @@ class InvoiceSupController {
                         );
                     }
 
-                    const variantQuantity = productVariant.variant_quantity;
+                    // Update stock level for all variants of the product
+                    productVariants = await ProductVariant.findAll({
+                        where: { product_id: productVariant.product_id },
+                        transaction: t,
+                    });
+
                     const newProductStockLevel = product.product_stock_level +
-                        (line.invoice_sup_line_quantity * variantQuantity);
+                        (line.invoice_sup_line_quantity * productVariant.variant_quantity);
 
                     await Product.update(
                         {
@@ -168,17 +174,18 @@ class InvoiceSupController {
                         }
                     );
 
-                    const newVariantStockLevel = Math.floor(newProductStockLevel / variantQuantity);
-
-                    await ProductVariant.update(
-                        {
-                            variant_stock_level: newVariantStockLevel,
-                        },
-                        {
-                            where: { variant_id: line.product_variant_id },
-                            transaction: t,
-                        }
-                    );
+                    await Promise.all(productVariants.map(async (variant) => {
+                        const newVariantStockLevel = Math.floor(newProductStockLevel / variant.variant_quantity);
+                        await ProductVariant.update(
+                            {
+                                variant_stock_level: newVariantStockLevel,
+                            },
+                            {
+                                where: { variant_id: variant.variant_id },
+                                transaction: t,
+                            }
+                        );
+                    }));
 
                     // Use the product_id from the productVariant
                     line.product_id = productVariant.product_id;
@@ -207,27 +214,27 @@ class InvoiceSupController {
                     );
 
                     // Find the product variant associated with the product
-                    productVariant = await ProductVariant.findOne({
+                    productVariants = await ProductVariant.findAll({
                         where: { product_id: line.product_id },
                         transaction: t,
                     });
 
-                    if (productVariant) {
-                        const variantQuantity = productVariant.variant_quantity;
+                    if (productVariants && productVariants.length > 0) {
                         const newProductStockLevel = product.product_stock_level +
                             line.invoice_sup_line_quantity;
 
-                        const newVariantStockLevel = Math.floor(newProductStockLevel / variantQuantity);
-
-                        await ProductVariant.update(
-                            {
-                                variant_stock_level: newVariantStockLevel,
-                            },
-                            {
-                                where: { variant_id: productVariant.variant_id },
-                                transaction: t,
-                            }
-                        );
+                        await Promise.all(productVariants.map(async (variant) => {
+                            const newVariantStockLevel = Math.floor(newProductStockLevel / variant.variant_quantity);
+                            await ProductVariant.update(
+                                {
+                                    variant_stock_level: newVariantStockLevel,
+                                },
+                                {
+                                    where: { variant_id: variant.variant_id },
+                                    transaction: t,
+                                }
+                            );
+                        }));
                     }
                 }
 

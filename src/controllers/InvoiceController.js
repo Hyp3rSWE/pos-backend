@@ -121,17 +121,26 @@ class InvoiceCusController {
                         }
                     );
 
-                    const newVariantStockLevel = Math.floor(newProductStockLevel / variantQuantity);
+                    // Update all variants of the product
+                    const allProductVariants = await ProductVariant.findAll({
+                        where: { product_id: productVariant.product_id },
+                        transaction: t,
+                    });
 
-                    await ProductVariant.update(
-                        {
-                            variant_stock_level: newVariantStockLevel,
-                        },
-                        {
-                            where: { variant_id: line.product_variant_id },
-                            transaction: t,
-                        }
-                    );
+                    await Promise.all(allProductVariants.map(async (variant) => {
+                        const variantQuantity = variant.variant_quantity;
+                        const newVariantStockLevel = Math.floor(newProductStockLevel / variantQuantity);
+
+                        await ProductVariant.update(
+                            {
+                                variant_stock_level: newVariantStockLevel,
+                            },
+                            {
+                                where: { variant_id: variant.variant_id },
+                                transaction: t,
+                            }
+                        );
+                    }));
 
                     line.product_id = productVariant.product_id;
                 } else {
@@ -165,14 +174,14 @@ class InvoiceCusController {
                         }
                     );
 
-                    // Find the product variant associated with the product
-                    productVariant = await ProductVariant.findOne({
+                    // Update all variants of the product
+                    const allProductVariants = await ProductVariant.findAll({
                         where: { product_id: line.product_id },
                         transaction: t,
                     });
 
-                    if (productVariant) {
-                        const variantQuantity = productVariant.variant_quantity;
+                    await Promise.all(allProductVariants.map(async (variant) => {
+                        const variantQuantity = variant.variant_quantity;
                         const newVariantStockLevel = Math.floor(newProductStockLevel / variantQuantity);
 
                         await ProductVariant.update(
@@ -180,11 +189,11 @@ class InvoiceCusController {
                                 variant_stock_level: newVariantStockLevel,
                             },
                             {
-                                where: { variant_id: productVariant.variant_id },
+                                where: { variant_id: variant.variant_id },
                                 transaction: t,
                             }
                         );
-                    }
+                    }));
                 }
 
                 return InvoiceLineCus.create(

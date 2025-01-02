@@ -23,9 +23,9 @@ Content-Type: application/json
   "supplier_id": 1,
   "invoice_lines": [
     {
-      "product_id": 27,
+      "product_id": 28,
       "product_variant_id": null,
-      "invoice_sup_line_quantity": 8,
+      "invoice_sup_line_quantity": 2,
       "invoice_sup_line_price": 300
     }
   ]

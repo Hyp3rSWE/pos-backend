@@ -60,35 +60,55 @@ class InvoiceSupController {
     static async getInvoiceBySupId(req, res) {
         try {
             const { sup_id } = req.params;
-
+    
             // Fetch invoices for the given supplier
             const invoices = await InvoiceSup.findAll({
                 where: { supplier_id: sup_id },
             });
-
+    
             if (!invoices || invoices.length === 0) {
                 return res.status(404).json({ message: "No invoices found for the supplier." });
             }
-
-            // Add invoice line details for each invoice
-            const invoicesWithLines = await Promise.all(
+    
+            // Add invoice line and product details for each invoice
+            const invoicesWithDetails = await Promise.all(
                 invoices.map(async (invoice) => {
                     const invoiceLines = await InvoiceLineSup.findAll({
                         where: { invoice_sup_id: invoice.invoice_sup_id },
+                        include: [
+                            {
+                                model: Product,
+                                attributes: ['product_name', 'product_barcode', 'product_cost', 'product_price'],
+                            },
+                        ],
                     });
+    
+                    const detailedLines = invoiceLines.map((line) => {
+                        const product = line.Product;
+                        return {
+                            ...line.get(),
+                            product_name: product?.product_name,
+                            product_barcode: product?.product_barcode,
+                            product_cost: product?.product_cost,
+                            product_price: product?.product_price,
+                        };
+                    });
+    
                     return {
                         ...invoice.get(),
-                        invoiceLines,
+                        date: invoice.createdAt, 
+                        invoiceLines: detailedLines,
                     };
                 })
             );
-
-            return res.json(invoicesWithLines);
+    
+            return res.json(invoicesWithDetails);
         } catch (error) {
             console.error("Error fetching invoices:", error);
             return res.status(500).json({ message: "Internal server error.", error });
         }
     }
+    
 
     // Create a new invoice
     static async createInvoice(req, res) {

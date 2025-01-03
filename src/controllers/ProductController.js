@@ -184,3 +184,24 @@ exports.deleteProduct = async (req, res) => {
         res.status(500).json({ message: 'Error deleting product', error: error.message });
     }
 };
+
+// Add this method to get supplier details for a product
+exports.getProductSupplier = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await Product.findByPk(id, {
+            include: [{ 
+                model: Supplier,
+                attributes: ['supplier_id', 'supplier_name', 'supplier_phone'] 
+            }]
+        });
+
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.status(200).json(product.Supplier);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching product supplier', error: error.message });
+    }
+};

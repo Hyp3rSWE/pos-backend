@@ -9,6 +9,6 @@ router.get("/barcode/:barcode", productController.getProductByBarcode);
 router.put("/:id", productController.updateProduct);
 router.put("/updateQuantity/:id", productController.updateQuantity);
 router.delete("/:id", productController.deleteProduct);
-router.get('/:id/supplier', ProductController.getProductSupplier);
+router.get('/:id/supplier', productController.getProductSupplier);
 
 module.exports = router;

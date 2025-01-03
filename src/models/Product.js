@@ -9,10 +9,7 @@ const Product = sequelize.define('Product', {
     },
     supplier_id: {
         type: DataTypes.INTEGER,
-        references: {
-            model: Supplier,
-            key: 'supplier_id',
-        },
+        allowNull: true
     },
     product_barcode: {
         type: DataTypes.STRING(50),
@@ -41,12 +38,11 @@ const Product = sequelize.define('Product', {
     }
 );
 
-// Define associations
-const defineAssociations = () => {
+// Export the model first
+module.exports = Product;
+
+// Define associations after export
+setTimeout(() => {
     const Supplier = require('./Supplier');
     Product.belongsTo(Supplier, { foreignKey: 'supplier_id' });
-};
-
-defineAssociations();
-
-module.exports = Product;
+}, 0);

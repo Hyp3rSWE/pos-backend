@@ -1,0 +1,21 @@
+### Get supplier for a specific product
+GET http://localhost:3001/products/1/supplier
+Content-Type: application/json
+
+###
+
+### Get all products for a specific supplier
+GET http://localhost:3001/suppliers/1/products
+Content-Type: application/json
+
+###
+
+### Get supplier for a product that doesn't exist
+GET http://localhost:3001/products/999/supplier
+Content-Type: application/json
+
+###
+
+### Get products for a supplier that doesn't exist
+GET http://localhost:3001/suppliers/999/products
+Content-Type: application/json

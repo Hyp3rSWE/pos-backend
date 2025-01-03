@@ -1,5 +1,5 @@
-const { sequelize } = require('../config/db');
 const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 
 const Supplier = sequelize.define('Supplier', {
     supplier_id: {
@@ -19,15 +19,14 @@ const Supplier = sequelize.define('Supplier', {
     }
 }, {
     tableName: 'supplier',
-    timestamps: false,
+    timestamps: false
 });
 
-// Define associations
-const defineAssociations = () => {
+// Export the model first
+module.exports = Supplier;
+
+// Define associations after export
+setTimeout(() => {
     const Product = require('./Product');
     Supplier.hasMany(Product, { foreignKey: 'supplier_id' });
-};
-
-defineAssociations();
-
-module.exports = Supplier;
+}, 0);

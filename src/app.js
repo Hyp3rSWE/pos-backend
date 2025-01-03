@@ -22,6 +22,8 @@ const Statistics = require('./routes/statistics.js');
 
 const adjustmentRoutes = require('./routes/AdjustmentRoutes');
 
+const { Adjustment, defineAssociations: defineAdjustmentAssociations } = require('./models/Adjustment');
+
 const app = express();
 
 // Middleware
@@ -115,5 +117,8 @@ app.use("/debt-sup", debtSupRoutes);
 app.use("/statistics", Statistics)
 
 app.use('/adjustments', adjustmentRoutes);
+
+// Define associations
+defineAdjustmentAssociations();
 
 module.exports = app;

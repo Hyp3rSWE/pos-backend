@@ -4,7 +4,6 @@ const ProductVariant = require('../models/ProductVariant');
 const { sequelize } = require('../config/db');
 
 class AdjustmentController {
-    // Create a new adjustment
     static async createAdjustment(req, res) {
         const t = await sequelize.transaction();
         try {
@@ -81,7 +80,6 @@ class AdjustmentController {
         }
     }
 
-    // Get all adjustments
     static async getAllAdjustments(req, res) {
         try {
             const adjustments = await Adjustment.findAll({
@@ -96,7 +94,6 @@ class AdjustmentController {
         }
     }
 
-    // Get adjustments by product
     static async getAdjustmentsByProduct(req, res) {
         try {
             const { product_id } = req.params;

@@ -1,8 +1,5 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
-const User = require('./User');
-const Product = require('./Product');
-const ProductVariant = require('./ProductVariant');
 
 const Adjustment = sequelize.define('Adjustment', {
     adjustment_id: {
@@ -13,25 +10,14 @@ const Adjustment = sequelize.define('Adjustment', {
     user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-            model: User,
-            key: 'user_id'
-        }
     },
     product_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-            model: Product,
-            key: 'product_id'
-        }
     },
     product_variant_id: {
         type: DataTypes.INTEGER,
-        references: {
-            model: ProductVariant,
-            key: 'variant_id'
-        }
+        allowNull: true,
     },
     previous_quantity: {
         type: DataTypes.INTEGER,
@@ -53,9 +39,15 @@ const Adjustment = sequelize.define('Adjustment', {
     timestamps: false
 });
 
-// Define associations
-Adjustment.belongsTo(User, { foreignKey: 'user_id' });
-Adjustment.belongsTo(Product, { foreignKey: 'product_id' });
-Adjustment.belongsTo(ProductVariant, { foreignKey: 'product_variant_id' });
+// Define associations after all models are defined
+const defineAssociations = () => {
+    const User = require('./User');
+    const Product = require('./Product');
+    const ProductVariant = require('./ProductVariant');
 
-module.exports = Adjustment;
+    Adjustment.belongsTo(User, { foreignKey: 'user_id' });
+    Adjustment.belongsTo(Product, { foreignKey: 'product_id' });
+    Adjustment.belongsTo(ProductVariant, { foreignKey: 'product_variant_id' });
+};
+
+module.exports = { Adjustment, defineAssociations };

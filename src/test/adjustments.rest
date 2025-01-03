@@ -1,0 +1,37 @@
+### Get all adjustments
+GET http://localhost:3001/adjustments
+Content-Type: application/json
+
+###
+
+### Get adjustments by product ID
+GET http://localhost:3001/adjustments/product/1
+Content-Type: application/json
+
+###
+
+### Create a new adjustment for a product
+POST http://localhost:3001/adjustments
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "product_id": 1,
+    "product_variant_id": null,
+    "new_quantity": 100,
+    "adjustment_reason": "Stock count correction"
+}
+
+###
+
+### Create a new adjustment for a product variant
+POST http://localhost:3001/adjustments
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "product_id": 1,
+    "product_variant_id": 1,
+    "new_quantity": 50,
+    "adjustment_reason": "Damaged inventory removal"
+}

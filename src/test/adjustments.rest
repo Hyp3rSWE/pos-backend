@@ -5,7 +5,7 @@ Content-Type: application/json
 ###
 
 ### Get adjustments by product ID
-GET http://localhost:3001/adjustments/product/1
+GET http://localhost:3001/adjustments/product/26
 Content-Type: application/json
 
 ###

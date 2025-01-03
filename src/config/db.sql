@@ -94,3 +94,17 @@ CREATE TABLE "invoice_line_sup" (
     CONSTRAINT FK_PRODUCT_LINE FOREIGN KEY ("product_id") REFERENCES "product" ("product_id"),
     CONSTRAINT FK_VARIANT_LINE FOREIGN KEY ("product_variant_id") REFERENCES "product_variant" ("variant_id")
 );
+
+CREATE TABLE "adjustment" (
+    "adjustment_id" SERIAL PRIMARY KEY,
+    "user_id" INT,
+    "product_id" INT,
+    "product_variant_id" INT,
+    "adjustment_timestamp" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "previous_quantity" INT,
+    "new_quantity" INT,
+    "adjustment_reason" VARCHAR(255),
+    CONSTRAINT FK_USER FOREIGN KEY ("user_id") REFERENCES "user" ("user_id"),
+    CONSTRAINT FK_PRODUCT FOREIGN KEY ("product_id") REFERENCES "product" ("product_id"),
+    CONSTRAINT FK_VARIANT FOREIGN KEY ("product_variant_id") REFERENCES "product_variant" ("variant_id")
+);

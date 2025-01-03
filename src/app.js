@@ -20,6 +20,7 @@ const invoiceLineSupRoutes = require("./routes/InvoiceLineRoutesSup.js");
 
 const Statistics = require('./routes/statistics.js');
 
+const adjustmentRoutes = require('./routes/AdjustmentRoutes');
 
 const app = express();
 
@@ -113,5 +114,6 @@ app.use("/debt-sup", debtSupRoutes);
 // Define Statistics
 app.use("/statistics", Statistics)
 
+app.use('/adjustments', adjustmentRoutes);
 
 module.exports = app;

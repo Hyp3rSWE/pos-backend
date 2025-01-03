@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
 
+// Define the model
 const Adjustment = sequelize.define('Adjustment', {
     adjustment_id: {
         type: DataTypes.INTEGER,
@@ -50,4 +51,8 @@ const defineAssociations = () => {
     Adjustment.belongsTo(ProductVariant, { foreignKey: 'product_variant_id' });
 };
 
-module.exports = { Adjustment, defineAssociations };
+// Call defineAssociations immediately
+defineAssociations();
+
+// Export only the model
+module.exports = Adjustment;

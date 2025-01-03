@@ -90,6 +90,7 @@ class AdjustmentController {
             });
             res.status(200).json(adjustments);
         } catch (error) {
+            console.error('Error fetching adjustments:', error);
             res.status(500).json({ error: error.message });
         }
     }

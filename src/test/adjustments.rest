@@ -16,7 +16,7 @@ Content-Type: application/json
 
 {
     "user_id": 1,
-    "product_id": 1,
+    "product_id": 26,
     "product_variant_id": null,
     "new_quantity": 100,
     "adjustment_reason": "Stock count correction"

@@ -118,7 +118,4 @@ app.use("/statistics", Statistics)
 
 app.use('/adjustments', adjustmentRoutes);
 
-// Define associations
-defineAdjustmentAssociations();
-
 module.exports = app;

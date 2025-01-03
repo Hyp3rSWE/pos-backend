@@ -22,4 +22,12 @@ const Supplier = sequelize.define('Supplier', {
     timestamps: false,
 });
 
+// Define associations
+const defineAssociations = () => {
+    const Product = require('./Product');
+    Supplier.hasMany(Product, { foreignKey: 'supplier_id' });
+};
+
+defineAssociations();
+
 module.exports = Supplier;

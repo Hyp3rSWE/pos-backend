@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
-const Supplier = require('./Supplier');
 
 const Product = sequelize.define('Product', {
     product_id: {
@@ -43,6 +42,11 @@ const Product = sequelize.define('Product', {
 );
 
 // Define associations
-Product.belongsTo(Supplier, { foreignKey: 'supplier_id' });
+const defineAssociations = () => {
+    const Supplier = require('./Supplier');
+    Product.belongsTo(Supplier, { foreignKey: 'supplier_id' });
+};
+
+defineAssociations();
 
 module.exports = Product;

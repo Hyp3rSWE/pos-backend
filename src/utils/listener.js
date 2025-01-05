@@ -1,7 +1,6 @@
 const dgram = require('dgram');
 const os = require('os');
 
-// Get the local IP address
 function getLocalIPAddress() {
   const interfaces = os.networkInterfaces();
   for (const iface of Object.values(interfaces)) {
@@ -11,12 +10,11 @@ function getLocalIPAddress() {
       }
     }
   }
-  return '127.0.0.1'; // Fallback if no external IP is found
+  return '127.0.0.1'; 
 }
 
 const server = dgram.createSocket('udp4');
 
-// Listen for incoming messages
 server.on('message', (msg, rinfo) => {
   console.log(`Received message: "${msg}" from ${rinfo.address}:${rinfo.port}`);
 

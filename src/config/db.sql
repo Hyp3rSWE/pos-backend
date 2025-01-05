@@ -108,3 +108,25 @@ CREATE TABLE "adjustment" (
     CONSTRAINT FK_PRODUCT FOREIGN KEY ("product_id") REFERENCES "product" ("product_id"),
     CONSTRAINT FK_VARIANT FOREIGN KEY ("product_variant_id") REFERENCES "product_variant" ("variant_id")
 );
+
+CREATE TABLE "Statistics" (
+    ID SERIAL PRIMARY KEY,
+    NAME VARCHAR(255) NOT NULL UNIQUE,
+    VALUE FLOAT NOT NULL DEFAULT 0
+);
+
+INSERT INTO "Statistics" (
+    NAME,
+    VALUE
+) VALUES (
+    'total_stock',
+    0
+),
+(
+    'total_debt_sup',
+    0
+),
+(
+    'total_debt_cus',
+    0
+);

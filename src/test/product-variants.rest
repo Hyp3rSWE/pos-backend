@@ -16,9 +16,9 @@ Content-Type: application/json
 
 {
     "product_id": 28,
-    "variant_barcode": "123545",
+    "variant_barcode": "1235465",
     "variant_price": 300,
-    "variant_quantity": 2,
+    "variant_quantity": 4,
     "variant_stock_level": 2
 }
 

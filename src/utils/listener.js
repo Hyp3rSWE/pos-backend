@@ -18,7 +18,7 @@ const server = dgram.createSocket('udp4');
 server.on('message', (msg, rinfo) => {
   console.log(`Received message: "${msg}" from ${rinfo.address}:${rinfo.port}`);
 
-  if (msg.toString().trim() === 'DISCOVER_DB') {
+  if (msg.toString().trim() === 'Who has the database?') {
     const response = JSON.stringify({ ip: getLocalIPAddress() });
     server.send(response, rinfo.port, rinfo.address, (err) => {
       if (err) {

@@ -1,10 +1,27 @@
+console.log("server.js is here");
+const { connectDB } = require('./config/db');
 require('dotenv').config();
 const app = require('./app');
-const { connectDB } = require('./config/db');
 const { sendBroadcastMessage } = require('./utils/sender');
 const { startListener } = require('./utils/listener');
+const fs = require('fs');
+const path = require('path');
 
-const PORT = process.env.PORT || 3002;
+
+const PORT = process.env.PORT || 3001;
+
+const updateEnvFile = (newHost) => {
+    const envPath = path.resolve(__dirname, '../.env');
+    const envFile = fs.readFileSync(envPath, 'utf-8');
+
+    const newEnvFile = envFile.replace(/DB_HOST=[^\r\n]*/, `DB_HOST=${newHost}`);
+    
+    // Write the updated content back to .env file
+    fs.writeFileSync(envPath, newEnvFile, 'utf-8');
+
+    // Reload the environment variables to reflect the new value
+    require('dotenv').config();
+};
 
 const startBroadcastingUntilResponse = () => {
     console.log('Starting broadcasting...');
@@ -13,21 +30,10 @@ const startBroadcastingUntilResponse = () => {
         if (ipAddress) {
             console.log('Database Server IP:', ipAddress);
 
-            // Update the DB_HOST with the received IP address
-            process.env.DB_HOST = ipAddress;
+            // Update DB_HOST in .env and reload environment variables
+            updateEnvFile(ipAddress);
 
-            // Call connectDB with the updated DB_HOST (received IP address)
-            connectDB()
-                .then(() => {
-                    console.log('Connected to the database using the new IP address.');
-                    clearIntervalCallback(); // Clear the interval
-                    process.exit(0); // Exit the process after successful connection
-                })
-                .catch((err) => {
-                    console.error('Database connection failed with the new IP address:', err);
-                    clearIntervalCallback(); // Clear the interval
-                    process.exit(1); // Exit the process if connection fails
-                });
+            process.exit();
         } else {
             console.log('No response yet. Retrying...');
         }
@@ -37,6 +43,7 @@ const startBroadcastingUntilResponse = () => {
 
 const startServer = async () => {
     try {
+        // Removed the timeout logic from connectDB
         await connectDB(); 
         console.log('Database connection successful.');
 
@@ -47,9 +54,9 @@ const startServer = async () => {
         });
     } catch (err) {
         if (err.message === 'Database connection timed out') {
+            // This block is not needed anymore
             console.error('Database connection timed out. Switching to broadcasting mode.');
             startBroadcastingUntilResponse();
-            
         } else {
             console.error('Database connection failed. Exiting...');
             process.exit(1); 

@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();  
 
-const sequelize = new Sequelize({
+let sequelize = new Sequelize({
     dialect: 'postgres',
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
@@ -12,7 +12,12 @@ const sequelize = new Sequelize({
    
 });
 
-const connectDB = async (timeouti = false) => {
+const connectDB = async (newHost = sequelize.options.host,timeouti = false) => {
+
+    
+    
+
+   
     
     console.log('from the host : ');
     console.log(process.env.DB_HOST);

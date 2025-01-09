@@ -1,12 +1,7 @@
 const dgram = require('dgram');
-const os = require('os')
+const os = require('os');
 
-
-
-// Create a UDP socket to send the broadcast message
 const client = dgram.createSocket('udp4');
-
-
 
 function getBroadcastAddress() {
     const interfaces = os.networkInterfaces();
@@ -24,44 +19,46 @@ function getBroadcastAddress() {
     throw new Error('No suitable network interface found.');
 }
 
-
-
-
-
-// Define the UDP port for communication
 const discoveryPort = 41234;
-const broadcastAddress = getBroadcastAddress(); // Broadcast to all machines on the network
-
-
-console.log(broadcastAddress)
-
-// The discovery message to send
+const broadcastAddress = getBroadcastAddress();
 const discoveryMessage = 'Who has the database?';
 
-// Send the discovery message
-client.bind(() => {
-    client.setBroadcast(true); // Enable broadcasting
+function sendBroadcastMessage(callback) {
+    const timeout = setTimeout(() => {
+        console.log('No response received within timeout period.');
+        callback(null, () => {}); // Passing an empty function as fallback
+        client.close();
+    }, 10000); // 10-second timeout
 
-    // Send the discovery message to the broadcast address
-    const messageBuffer = Buffer.from(discoveryMessage);
-    client.send(messageBuffer, 0, messageBuffer.length, discoveryPort, broadcastAddress, (err) => {
-        if (err) {
-            console.error('Error sending broadcast message:', err);
-        } else {
-            console.log('Broadcast message sent');
-        }
+    client.bind(() => {
+        client.setBroadcast(true);
+
+        const interval = setInterval(() => {
+            const messageBuffer = Buffer.from(discoveryMessage);
+            client.send(messageBuffer, 0, messageBuffer.length, discoveryPort, broadcastAddress, (err) => {
+                if (err) {
+                    console.error('Error sending broadcast message:', err);
+                } else {
+                    console.log('Broadcast message sent');
+                }
+            });
+        }, 2000); // Send broadcast every 2 seconds
+
+        // Listen for responses
+        client.on('message', (msg, rinfo) => {
+            clearTimeout(timeout);
+            clearInterval(interval); // Clear the interval when a message is received
+
+            const response = JSON.parse(msg.toString());
+            console.log(`Received database server IP: ${response.ip} from ${rinfo.address}:${rinfo.port}`);
+
+            // Pass the IP address and the interval clearing function to the callback
+            process.env.DB_HOST = response.ip;
+
+            callback(response.ip, () => clearInterval(interval));  
+            client.close();
+        });
     });
-});
+}
 
-// Listen for responses from the database server
-client.on('message', (msg, rinfo) => {
-    const response = JSON.parse(msg.toString());
-    console.log(`Received database server IP: ${response.host} from ${rinfo.address}:${rinfo.port}`);
-    client.close(); // Close the client after receiving a response
-});
-
-// Timeout for waiting for the response
-setTimeout(() => {
-    console.log('No response received within timeout period.');
-    client.close();
-}, 50000); // 5-second timeout
+module.exports = { sendBroadcastMessage };

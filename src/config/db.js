@@ -1,7 +1,6 @@
 const { Sequelize } = require('sequelize');
-require('dotenv').config();  // Load environment variables
+require('dotenv').config();  
 
-// PostgreSQL connection with Sequelize
 const sequelize = new Sequelize({
     dialect: 'postgres',
     host: process.env.DB_HOST,
@@ -9,16 +8,27 @@ const sequelize = new Sequelize({
     database: process.env.DB_NAME,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    logging: true, 
+    logging: false,
+   
 });
 
-const connectDB = async () => {
+const connectDB = async (timeouti = false) => {
+    
+    console.log('from the host : ');
+    console.log(process.env.DB_HOST);
+    // Timeout logic to fail after 5 seconds if the DB is unreachable
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Connection timed out')), 5000)); 
+    
     try {
-        await sequelize.authenticate();  
+        await Promise.race([sequelize.authenticate(), timeout]); // Race between authenticate and timeout
         console.log('Connected to PostgreSQL database');
     } catch (err) {
-        console.error('Database connection error', err);
-        process.exit(1);
+        if (err.message === 'Connection timed out') {
+            throw new Error('Database connection timed out');
+        } else {
+            console.error('Database connection error:', err.message);
+            throw err; // Rethrow other errors
+        }
     }
 };
 

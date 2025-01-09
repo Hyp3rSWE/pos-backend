@@ -5,7 +5,7 @@ Content-Type: application/json
 ###
 
 # Get a product variant by ID
-GET http://localhost:3001/product-variants/1
+GET http://localhost:3001/product-variants/6
 Content-Type: application/json
 
 ###

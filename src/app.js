@@ -1,3 +1,4 @@
+console.log("app.js is here");
 const express = require("express");
 const session = require("express-session");
 

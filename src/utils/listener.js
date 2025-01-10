@@ -13,13 +13,20 @@ function getLocalIPAddress() {
   return '127.0.0.1'; 
 }
 
-const server = dgram.createSocket('udp4');
-
-server.on('message', (msg, rinfo) => {
-  console.log(`Received message: "${msg}" from ${rinfo.address}:${rinfo.port}`);
-
+function handleMessage(msg) {
   if (msg.toString().trim() === 'Who has the database?') {
-    const response = JSON.stringify({ ip: getLocalIPAddress() });
+    return JSON.stringify({ ip: getLocalIPAddress() });
+  }
+  return 'Invalid message';
+}
+
+function startListener() {
+  const server = dgram.createSocket('udp4');
+
+  server.on('message', (msg, rinfo) => {
+    console.log(`Received message: "${msg}" from ${rinfo.address}:${rinfo.port}`);
+
+    const response = handleMessage(msg);
     server.send(response, rinfo.port, rinfo.address, (err) => {
       if (err) {
         console.error('Error sending response:', err);
@@ -27,10 +34,11 @@ server.on('message', (msg, rinfo) => {
         console.log(`Response sent: "${response}"`);
       }
     });
-  }
-});
+  });
 
-// Start the server
-server.bind(41234, () => {
-  console.log('Responder listening on port 41234...');
-});
+  server.bind(41234, () => {
+    console.log('Responder listening on port 41234...');
+  });
+}
+
+module.exports = { startListener };

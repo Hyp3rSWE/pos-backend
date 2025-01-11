@@ -17,10 +17,10 @@ Content-Type: application/json
 {
   "invoice_cus_total_amount": 500,
   "customer_id": 1,
-  "invoice_lines": [w
+  "invoice_lines": [
     {
-      "product_id": null,
-      "product_variant_id": 10,
+      "product_id": 27,
+      "product_variant_id": null,
       "invoice_cus_line_quantity": 1,
       "invoice_cus_line_price": 300
     }

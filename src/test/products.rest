@@ -5,9 +5,14 @@ Content-Type: application/json
 ###
 
 # Get a single product by ID
-GET http://localhost:3001/products/2
+GET http://localhost:3001/products/27
 Content-Type: application/json
+###
 
+
+# Get a single product by barcode
+GET http://localhost:3001/products/barcode/12345
+Content-Type: application/json
 ###
 
 # Create a new product with a supplier
